@@ -7,6 +7,8 @@
    
     <property name="builddir" value="${project.basedir}/build" override="true" />
     <property name="srcdir" value="${project.basedir}/upload" override="true" />
+    
+    <property name="md2phpbb" value="md2phpbb" override="true" />
 
     <exec outputProperty="git.branch" 
         command="git rev-parse --abbrev-ref HEAD" />
@@ -53,6 +55,9 @@
     <target name="build" depends="prepare,phpcs">
         <echo msg="Copying files to build directory..." />
         <copy todir="${builddir}">
+	    <fileset dir=".">
+		<include name="README.md" />
+	    </fileset>
             <fileset dir="${srcdir}">
                 <include name="LICENCE.md" />
                 <include name="admin/**/*.php" />
@@ -64,6 +69,17 @@
                 <include name="system/**/*.php" />
             </fileset>
         </copy>
+        <if>
+            <not>
+            <available file="${md2phpBB}" type="file" />
+            </not>
+            <then>
+                <echo msg="Generating README.phpbb" />
+                <exec executable="md2phpBB" dir="${srcdir}" output="${builddir}/README.phpbb">
+                    <arg file="README.md" />
+                </exec>
+            </then>
+        </if>
     </target>
 
     <!-- ============================================  -->
