@@ -59,3 +59,9 @@ was successful, was declined or otherwise cancelled.
 ##Support
 
 For support, please contact <support@citypay.com>.
+
+##Test suite support
+
+Although some effort has been made to enable unit testing of the plugin
+using a fork of the ("https://github.com/openbaypro/opencart-test-suite.git)
+repository, unit testing is not presently supported.
