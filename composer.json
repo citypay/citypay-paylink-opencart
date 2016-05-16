@@ -1,0 +1,11 @@
+{
+	"name": "citypay/citypay-paylink-opencart",
+    "type": "project",
+    "description": "CityPay Paylink Plugin for OpenCart",
+    "keywords": ["opencart"],
+    "homepage": "http://www.citypay.com",
+    "license": "GPL-3.0+",
+    "require": {
+        "php": ">=5.4.0"
+    }
+}

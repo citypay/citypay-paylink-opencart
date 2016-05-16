@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="citypay-paylink-opencart" default="dist" basedir=".">
+    
+    <property name="package" value="${phing.project.name}" override="true" />
+    <property name="version" value="1.0.0" override="true" />
+   
+    <property name="builddir" value="${project.basedir}/build" override="true" />
+    <property name="srcdir" value="${project.basedir}/upload" override="true" />
+
+    <exec outputProperty="git.branch" 
+        command="git rev-parse --abbrev-ref HEAD" />
+    
+    <!-- ============================================  -->
+    <!-- Target: clean                               -->
+    <!-- ============================================  -->
+    <target name="clean">
+        <echo msg="Cleaning directory structure" />
+        <available file="${builddir}" property="dir.build" />
+        <if>
+            <isset property="dir.build" />
+            <then>
+                <delete verbose="true" includeemptydirs="true">
+                    <fileset dir="${builddir}">
+                        <include name="**/**" />
+                    </fileset>
+                </delete>            
+            </then>
+        </if>
+    </target>
+    
+    <!-- ============================================  -->
+    <!-- Target: prepare                               -->
+    <!-- ============================================  -->
+    <target name="prepare" depends="clean">
+        <echo msg="Making directory ${builddir} (${git.branch})" />
+        <mkdir dir="${builddir}" />
+    </target>
+    
+    <!-- ============================================  -->
+    <!-- Target: phpcs                                 -->
+    <!-- ============================================  -->    
+    <target name="phpcs" description="Generate checkstyle.xml using PHP_CodeSniffer">
+	<echo msg="Running PHP_CodeSniffer" />
+        <exec executable="phpcs" dir="${project.basedir}">
+            <arg line="--report=checkstyle --report-file=${project.basedir}/tests/checkstyle.xml --standard=${project.basedir}/tests/phpcs/OpenCart/ruleset.xml --extensions=php ${srcdir}/"/>
+        </exec>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: build                                 -->
+    <!-- ============================================  -->
+    <target name="build" depends="prepare,phpcs">
+        <echo msg="Copying files to build directory..." />
+        <copy todir="${builddir}">
+            <fileset dir="${srcdir}">
+                <include name="LICENCE.md" />
+                <include name="admin/**/*.php" />
+                <include name="admin/**/*.png" />
+                <include name="admin/**/*.tpl" />
+                <include name="catalog/**/*.php" />
+                <include name="catalog/**/*.png" />
+                <include name="catalog/**/*.tpl" />
+                <include name="system/**/*.php" />
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- (DEFAULT)  Target: dist                       -->
+    <!-- ============================================  -->
+    <target name="dist" depends="build">
+        <echo msg="Creating archive..." />
+        <zip destfile="${builddir}/${package}.zip">
+            <fileset dir="${builddir}">
+                <include name="**/*" />
+            </fileset>
+        </zip>
+        <echo msg="Files copied and compressed in build directory OK!" />
+    </target>
+    
+</project>

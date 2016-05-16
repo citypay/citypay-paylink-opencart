@@ -1,0 +1,19 @@
+<phpunit
+    bootstrap="phpunit/bootstrap.php"
+    verbose="true">
+    <filter>
+        <blacklist>
+            
+        </blacklist>
+        <whitelist>
+            <directory>opencart/admin</directory>
+            <directory>opencart/catalog</directory>
+            <directory>opencart/system</directory>
+        </whitelist>
+    </filter>
+    <testsuites>
+		<testsuite name="Unit tests">
+			<directory suffix="Test.php">phpunit</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>

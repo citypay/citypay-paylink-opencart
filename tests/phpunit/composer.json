@@ -1,0 +1,31 @@
+{
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/opencart/opencart.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/beyondit/opencart-test-suite.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/openbaypro/opencart-test-suite.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/rwbisson/opencart-test-suite.git"
+        }
+    ],
+    "require": {
+        "phpunit/phpunit": "4.0.*",
+        "phpunit/php-invoker": "1.1.*",
+        "opencart/opencart": "2.2.0.*",
+        "rwbisson/opencart-test-suite": "dev-master"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "compatibility/2.2.0.0"
+        }
+    }
+}
