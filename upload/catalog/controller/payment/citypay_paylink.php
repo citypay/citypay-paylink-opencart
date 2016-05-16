@@ -8,11 +8,11 @@ class ControllerPaymentCityPayPaylink extends Controller {
     
     protected function process() {
         
-		$this->load->model('checkout/order');
-		$this->load->model('payment/citypay_paylink');
+        $this->load->model('checkout/order');
+        $this->load->model('payment/citypay_paylink');
         $this->load->model('setting/setting');
-		$order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-	
+        $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+    
         //
         //  Set the status of the order to that specified by the configuration
         //  item 'citypay_paylink_new_order_status_id'.
@@ -217,11 +217,11 @@ class ControllerPaymentCityPayPaylink extends Controller {
         
         $data['button_confirm'] = $this->language->get('button_confirm');
 
-		$data['text_loading'] = $this->language->get('text_loading');
+        $data['text_loading'] = $this->language->get('text_loading');
 
-		$data['citypay_paylink_plugin'] = $this->url->link('payment/citypay_paylink');
+        $data['citypay_paylink_plugin'] = $this->url->link('payment/citypay_paylink');
 
-		return $this->load->view('payment/citypay_paylink', $data);
+        return $this->load->view('payment/citypay_paylink', $data);
   
         $this->response->setOutput($this->load->view('payment/citypay_paylink', $data));
     }

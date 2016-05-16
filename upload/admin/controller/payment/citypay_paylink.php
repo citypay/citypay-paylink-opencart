@@ -82,37 +82,37 @@ class ControllerPaymentCityPayPaylink extends Controller {
         $data['cancel'] = $this->url->link('extension/payment', 'token='.$this->session->data['token'], 'SSL');
         
         if (isset($this->error['warning'])) {
-			$data['error_warning'] = $this->error['warning'];
-		} else {
-			$data['error_warning'] = '';
-		}
+            $data['error_warning'] = $this->error['warning'];
+        } else {
+            $data['error_warning'] = '';
+        }
         
-		if (isset($this->error['merchant_id'])) {
-			$data['error_merchant_id'] = $this->error['merchant_id'];
-		} else {
-			$data['error_merchant_id'] = '';
-		}
+        if (isset($this->error['merchant_id'])) {
+            $data['error_merchant_id'] = $this->error['merchant_id'];
+        } else {
+            $data['error_merchant_id'] = '';
+        }
         
-		if (isset($this->error['licence_key'])) {
-			$data['error_licence_key'] = $this->error['licence_key'];
-		} else {
-			$data['error_licence_key'] = '';
-		}
+        if (isset($this->error['licence_key'])) {
+            $data['error_licence_key'] = $this->error['licence_key'];
+        } else {
+            $data['error_licence_key'] = '';
+        }
         
-		$data['breadcrumbs'] = array();
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], true)
-		);
+        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'][] = array(
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], true)
+        );
         
         $data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_payment'),
-			'href' => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], true)
-		);
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('heading_title'),
-			'href' => $this->url->link('payment/citypay_paylink', 'token=' . $this->session->data['token'], true)
-		);
+            'text' => $this->language->get('text_payment'),
+            'href' => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], true)
+        );
+        $data['breadcrumbs'][] = array(
+            'text' => $this->language->get('heading_title'),
+            'href' => $this->url->link('payment/citypay_paylink', 'token=' . $this->session->data['token'], true)
+        );
    
         //
         //
@@ -187,7 +187,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
         $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
         
         $this->load->model('localisation/geo_zone');
-		$data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
+        $data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
         
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
@@ -199,17 +199,17 @@ class ControllerPaymentCityPayPaylink extends Controller {
     protected function validate() {
         
         if (!$this->user->hasPermission('modify', 'payment/citypay_paylink')) {
-			$this->error['warning'] = $this->language->get('error_permission');
-		}
+            $this->error['warning'] = $this->language->get('error_permission');
+        }
         
-		if (!$this->request->post['citypay_paylink_merchant_id']) {
-			$this->error['merchant_id'] = $this->language->get('error_merchant_id');
-		}
+        if (!$this->request->post['citypay_paylink_merchant_id']) {
+            $this->error['merchant_id'] = $this->language->get('error_merchant_id');
+        }
         
-       	if (!$this->request->post['citypay_paylink_licence_key']) {
-			$this->error['licence_key'] = $this->language->get('error_licence_key');
-		}
+        if (!$this->request->post['citypay_paylink_licence_key']) {
+            $this->error['licence_key'] = $this->language->get('error_licence_key');
+        }
         
-		return !$this->error;
+        return !$this->error;
     }
 }
