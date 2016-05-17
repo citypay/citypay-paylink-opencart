@@ -8,6 +8,8 @@
     <property name="builddir" value="${project.basedir}/build" override="true" />
     <property name="srcdir" value="${project.basedir}/upload" override="true" />
     
+    <property name="extdirectorydir" value="${project.basedir}/directory" override="true" />
+
     <exec outputProperty="md2phpbb"
         command="which md2phpbb" />
 
@@ -74,7 +76,7 @@
             <available file="${md2phpbb}" type="file" />
             <then>
                 <echo msg="Generating README.phpbb" />
-                <exec executable="${md2phpbb}" dir="${srcdir}" output="${builddir}/README.phpbb">
+                <exec executable="${md2phpbb}" dir="${srcdir}" output="${extdirectorydir}/README.phpbb">
                     <arg file="README.md" />
                 </exec>
             </then>
