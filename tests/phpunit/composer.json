@@ -11,10 +11,6 @@
         {
             "type": "vcs",
             "url": "https://github.com/openbaypro/opencart-test-suite.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/rwbisson/opencart-test-suite.git"
         }
     ],
     "require": {
