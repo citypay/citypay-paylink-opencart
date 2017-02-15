@@ -1,5 +1,5 @@
 <?php
-class ModelPaymentSecureTradingPp extends Model {
+class ModelPaymentCityPayPaylink extends Model {
     
     public function install() {
         $this->db->query("
@@ -11,7 +11,7 @@ class ModelPaymentSecureTradingPp extends Model {
               `total` DECIMAL( 10, 2 ) NOT NULL,
               `created` DATETIME NOT NULL,
               `modified` DATETIME NOT NULL,
-              PRIMARY KEY (`securetrading_pp_order_id`)
+              PRIMARY KEY (`citypay_paylink_order_id`)
             ) ENGINE=MyISAM DEFAULT COLLATE=utf8_general_ci;");
         $this->db->query("
             CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "citypay_paylink_order_transaction` (
@@ -20,7 +20,7 @@ class ModelPaymentSecureTradingPp extends Model {
               `created` DATETIME NOT NULL,
               `type` ENUM('auth', 'payment', 'rebate', 'reversed') DEFAULT NULL,
               `amount` DECIMAL( 10, 2 ) NOT NULL,
-              PRIMARY KEY (`securetrading_pp_order_transaction_id`)
+              PRIMARY KEY (`citypay_paylink_order_transaction_id`)
             ) ENGINE=MyISAM DEFAULT COLLATE=utf8_general_ci;");
     }
     
@@ -50,8 +50,8 @@ class ModelPaymentSecureTradingPp extends Model {
         $qry = $this->db->query(
             "SELECT * FROM `"
                 . DB_PREFIX
-                . "citypay_paylink_order_transaction` WHERE `securetrading_pp_order_id` = '"
-                . (int) $securetrading_pp_order_id
+                . "citypay_paylink_order_transaction` WHERE `citypay_paylink_order_id` = '"
+                . (int) $citypay_paylink_order_id
                 . "'"
         );
         if ($q->num_rows) {
@@ -74,7 +74,7 @@ class ModelPaymentSecureTradingPp extends Model {
     }
     
     public function logger($message) {
-        $log = new Log('securetrading_pp.log');
+        $log = new Log('citypay_paylink.log');
         $log->write($message);
     }
 }
