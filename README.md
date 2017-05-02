@@ -1,6 +1,8 @@
 CityPay Paylink Plugin for OpenCart
 ===================================
 
+![OpenCart Logo](opencart.png)
+
 CityPay Paylink Plugin for OpenCart is intended to enable hosted form
 payment processing using CityPay's Paylink system with OpenCart, the
 popular open-source electronic retail commerce solution.
