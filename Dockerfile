@@ -46,8 +46,10 @@ COPY docker/startup.sh /opt
 #COPY docker/config.php /opencart/config.php
 #COPY docker/admin-config.php /opencart/admin/config.php
 
-RUN chmod 0755 /opencart/config.php /opencart/admin/config.php \
+RUN touch /opencart/config.php \
+    && touch /opencart/admin/config.php \
     && chown -R www-data:www-data /opencart
+#    && chmod 0755 /opencart/config.php /opencart/admin/config.php
 # do not delete install directory as this probably will be a frash run
 #    && rm -rf /opencart/install
 
