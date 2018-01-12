@@ -59,19 +59,16 @@
         <echo msg="Copying files to build directory..." />
         <mkdir dir="${builddir}/upload" />
         <copy todir="${builddir}/upload">
-	    <fileset dir=".">
-		<!-- <include name="README.md" /> -->
-	    </fileset>
-            <fileset dir="${srcdir}">
-                <!-- <include name="LICENCE.md" /> -->
-                <include name="admin/**/*.php" />
-                <include name="admin/**/*.png" />
-                <include name="admin/**/*.tpl" />
-                <include name="catalog/**/*.php" />
-                <include name="catalog/**/*.png" />
-                <include name="catalog/**/*.tpl" />
-                <include name="system/**/*.php" />
-            </fileset>
+        <fileset dir="${srcdir}">
+            <!-- <include name="LICENCE.md" /> -->
+            <include name="admin/**/*.php" />
+            <include name="admin/**/*.png" />
+            <include name="admin/**/*.tpl" />
+            <include name="catalog/**/*.php" />
+            <include name="catalog/**/*.png" />
+            <include name="catalog/**/*.tpl" />
+            <include name="system/**/*.php" />
+        </fileset>
         </copy>
         <if>
             <available file="${md2phpbb}" type="file" />
