@@ -6,3 +6,5 @@ tests/checkstyle.xml
 vendor
 /.idea/
 /.env
+/db/
+/build/
