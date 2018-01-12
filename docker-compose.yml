@@ -1,31 +1,30 @@
 version: "3"
 services:
-    ocdatabase:
-        container_name: ocdatabasedocker-compos
-        image: bitnami/mariadb:latest
-        #        ports:
-        #        - "127.0.0.1:3306:3306"
+    ocdb:
+        container_name: ocdb
+        image: mysql:5.7
         volumes:
-                - ./db:/bitnami
+                - ./db:/var/lib/mysql
         environment:
-              - ALLOW_EMPTY_PASSWORD=yes
+              - MYSQL_DATABASE=ocdb
+              - MYSQL_ROOT_PASSWORD=P4ssw0rd!
         env_file: .env
         networks:
-                - opencartnet
+                - ocnet
     opencart:
+        container_name: opencart
         image: citypay/opencart:latest
         ports:
                 - 127.0.0.1:80:80
         environment:
                - CITYPAY_PLUGIN_VERSION= 1.1.0
-               - MARIADB_HOST=ocdatabase
         depends_on:
-                - ocdatabase
+                - ocdb
         env_file: .env
         networks:
-                - opencartnet
-#        volumes:
-#          - ./src:/var/www/html/wp-content/plugins/citypay-paylink-woocommerce
+                - ocnet
+        volumes:
+          - ./src:/var/www/html/wp-content/plugins/citypay-paylink-woocommerce
 networks:
-    opencartnet:
-            driver: bridge
+    ocnet:
+      driver: bridge
