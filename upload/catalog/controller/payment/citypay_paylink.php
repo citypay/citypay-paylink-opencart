@@ -270,7 +270,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
     public function accept() {
              
         if ($this->request->server['REQUEST_METHOD'] != 'POST') {
-            _log(
+            $this->_log(
                 $this->language->get('error_purported_redirection_by_paylink_of_incorrect_type'),
                 $this->request->server,
                 $this->request->get,
@@ -281,7 +281,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
         }
             
         if (!$this->validate($this->config->get('citypay_paylink_licence_key'))) {
-            _log(
+            $this->_log(
                 $this->language->get('error_paylink_response_could_not_be_validated'),
                 $this->request->post
             );
@@ -290,7 +290,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
         }
 
         if ($this->request->post['authorised'] != 'true') {
-            _log(
+            $this->_log(
                 $this->language->get('error_paylink_response_indicates_payment_failure'),
                 $this->request->post
             );
@@ -307,7 +307,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
     public function cancel() {
               
         if ($this->request->server['REQUEST_METHOD'] != 'POST') {
-            _log(
+            $this->_log(
                 $this->language->get('error_purported_redirection_by_paylink_of_incorrect_type'),
                 $this->request->server,
                 $this->request->get,
@@ -318,7 +318,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
         }
             
         if (!$this->validate($this->config->get('citypay_paylink_licence_key'))) {
-            _log(
+            $this->_log(
                 $this->language->get('error_paylink_response_could_not_be_validated'),
                 $this->request->post
             );
@@ -327,7 +327,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
         }
             
         if ($this->request->post['authorised'] != 'false') {
-            _log(
+            $this->_log(
                 $this->language->get('error_paylink_response_indicates_payment_failure'),
                 $this->request->post
             );
@@ -367,7 +367,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
             http_response_code(400);
             flush();
             $errorMessage = $this->language->get('error_postback_message_not_delivered_as_http_post');
-            _log($errorMessage);
+            $this->_log($errorMessage);
             $this->model_checkout_order->addOrderHistory(
                 $order['order_id'],
                 $this->config->get('citypay_paylink_failed_order_status_id'),
@@ -385,7 +385,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
             http_response_code(400);
             flush();
             $errorMessage = $this->language->get('error_postback_message_had_no_body');
-            _log($errorMessage);
+            $this->_log($errorMessage);
             $this->model_checkout_order->addOrderHistory(
                 $order['order_id'],
                 $this->config->get('citypay_paylink_failed_order_status_id'),
@@ -404,7 +404,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
             http_response_code(400);
             flush();
             $errorMessage = $this->language->get('error_postback_message_body_not_parseable_as_json');
-            _log($errorMessage);
+            $this->_log($errorMessage);
             $this->model_checkout_order->addOrderHistory(
                 $order['order_id'],
                 $this->config->get('citypay_paylink_failed_order_status_id'),
@@ -418,7 +418,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
             http_response_code(400);
             flush(); 
             $errorMessage = $this->language->get('error_postback_message_body_not_capable_of_validation');
-            _log($errorMessage);
+            $this->_log($errorMessage);
             $this->model_checkout_order->addOrderHistory(
                 $order['order_id'],
                 $this->config->get('citypay_paylink_failed_order_status_id'),
@@ -487,7 +487,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
             $this->request->post['transno'],
             $this->request->post['identifier']
         )) {            
-            _log(
+            $this->_log(
                 $this->language->get('error_paylink_response_data_not_available_for_validation'),
                 $this->request
             );
