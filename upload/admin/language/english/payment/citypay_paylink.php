@@ -19,6 +19,7 @@ $_['document_title_configuration'] = 'CityPay Paylink Hosted Form Configuration'
 
 $_['entry_label_merchant_id'] = 'Merchant ID';
 $_['entry_label_licence_key'] = 'Licence Key';
+$_['entry_label_postback_url'] = 'Postback URL';
 $_['entry_label_merchant_currency'] = 'Currency';
 
 $_['entry_label_new_order_status'] = 'New Order Status';

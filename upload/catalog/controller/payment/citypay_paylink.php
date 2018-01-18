@@ -1,9 +1,13 @@
 <?php
+
+
 class ControllerPaymentCityPayPaylink extends Controller {
 
     function __construct($registry) {
         parent::__construct($registry);
         $this->load->language('payment/citypay_paylink');
+
+
     }
     
     protected function process() {
@@ -17,6 +21,10 @@ class ControllerPaymentCityPayPaylink extends Controller {
         //  Set the status of the order to that specified by the configuration
         //  item 'citypay_paylink_new_order_status_id'.
         //
+
+        $logger = new Log('debug.log');
+        $logger->write('Creating new order...');
+
         $this->model_checkout_order->addOrderHistory(
             $order['order_id'],
             $this->config->get('citypay_paylink_new_order_status_id'),
@@ -50,11 +58,19 @@ class ControllerPaymentCityPayPaylink extends Controller {
         //
         //  Token configuration
         //
+        $pbUrl=$this->url->link('payment/citypay_paylink/postback') . '&order_id=' . $order['order_id'];
+
+        if(trim($this->config->get('citypay_paylink_postback_url')) != ''){
+            $customURL = trim($this->config->get('citypay_paylink_postback_url'));
+            $pbUrl = preg_replace("/(http)(.*)(\?.*)/", $customURL."$3", $pbUrl);
+        }
+
+        $logger->write('Postback URL ---> '.$pbUrl);
+
+
         $tokenConfig = array();
         $tokenConfig['postback_policy'] = 'async';
-        $tokenConfig['postback'] = $this->url->link('payment/citypay_paylink/postback')
-            . '&order_id='
-            . $order['order_id'];
+        $tokenConfig['postback'] = $pbUrl;
         $tokenConfig['redirect_success'] = $this->url->link('payment/citypay_paylink/accept');
         $tokenConfig['redirect_failure'] = $this->url->link('payment/citypay_paylink/cancel');
         $tokenConfig['return_params'] = 'true';
@@ -123,8 +139,12 @@ class ControllerPaymentCityPayPaylink extends Controller {
             $httpsResponseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
 
+            $logger->write('HttpsResponse---> '.$httpsResponse);
+
             if ($httpsResponseCode == 200) {    
                 $decodedResponse = json_decode($httpsResponse);
+
+
 
                 if ($decodedResponse->result == 0x01)
                 {
@@ -222,7 +242,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
         $data['citypay_paylink_plugin'] = $this->url->link('payment/citypay_paylink');
 
         return $this->load->view('payment/citypay_paylink', $data);
-  
+
         $this->response->setOutput($this->load->view('payment/citypay_paylink', $data));
     }
     
@@ -322,7 +342,9 @@ class ControllerPaymentCityPayPaylink extends Controller {
     }
      
     public function postback() {
-        
+        $logger = new Log('debug.log'); //creating a log file for debug
+        $logger->write('Calling postback...');
+
         function object_to_array($obj) {
             if(is_object($obj)) $obj = (array) $obj;
             if(is_array($obj)) {
@@ -359,7 +381,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
         //  "php://input" read-only I/O stream.
         //
         $postback = file_get_contents("php://input");
-        if ($postback === FALSE) {
+        if ($postback == FALSE) {
             http_response_code(400);
             flush();
             $errorMessage = $this->language->get('error_postback_message_had_no_body');
@@ -414,7 +436,11 @@ class ControllerPaymentCityPayPaylink extends Controller {
         //
         //  Check whether the Payment Transaction was authorised.
         //
-        if ($jsonPostback->authorised === "true") {
+
+
+        $logger->write('JSON Postback---> '.(string)$jsonPostback); // getting postback info
+
+        if ($jsonPostback->authorised == "true") {
             $this->model_checkout_order->addOrderHistory(
                 $order['order_id'],
                 $this->config->get('citypay_paylink_completed_order_status_id'),

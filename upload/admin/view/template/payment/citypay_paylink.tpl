@@ -44,6 +44,12 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="col-sm-2 control-label" for="citypay_paylink_postback_url"><?php echo $entry_label_postback_url; ?></label>
+                        <div class="col-sm-10">
+                            <input type="text" name="citypay_paylink_postback_url" value="<?php echo $citypay_paylink_postback_url; ?>" placeholder="<?php echo $entry_label_postback_url; ?> is optional" id="citypay_paylink_postback_url" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-2 control-label" for="citypay_paylink_merchant_currency_id"><?php echo $entry_label_merchant_currency; ?></label>
                         <div class="col-sm-10">
                             <select name="citypay_paylink_merchant_currency_id" id="citypay_paylink_merchant_currency_id" class="form-control">

@@ -60,7 +60,6 @@ ENV CITYPAY_PLUGIN_VERSION 1.1.0
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 	&& ln -sf /dev/stderr /var/log/nginx/error.log
 
-
 EXPOSE 80
 
 STOPSIGNAL SIGTERM

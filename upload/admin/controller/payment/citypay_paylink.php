@@ -56,6 +56,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
         $data['heading_title'] = $this->language->get('heading_title');
         $data['entry_label_merchant_id'] = $this->language->get('entry_label_merchant_id');
         $data['entry_label_licence_key'] = $this->language->get('entry_label_licence_key');
+        $data['entry_label_postback_url'] = $this->language->get('entry_label_postback_url');
         $data['entry_label_merchant_currency'] = $this->language->get('entry_label_merchant_currency');
         
         $data['entry_label_new_order_status'] = $this->language->get('entry_label_new_order_status');
@@ -92,7 +93,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
         } else {
             $data['error_merchant_id'] = '';
         }
-        
+
         if (isset($this->error['licence_key'])) {
             $data['error_licence_key'] = $this->error['licence_key'];
         } else {
@@ -128,7 +129,13 @@ class ControllerPaymentCityPayPaylink extends Controller {
         } else {
             $data['citypay_paylink_licence_key'] = $this->config->get('citypay_paylink_licence_key');
         }
-        
+
+        if (isset($this->request->post['citypay_paylink_postback_url'])) {
+            $data['citypay_paylink_postback_url'] = $this->request->post['citypay_paylink_postback_url'];
+        } else {
+            $data['citypay_paylink_postback_url'] = $this->config->get('citypay_paylink_postback_url');
+        }
+
         if (isset($this->request->post['citypay_paylink_merchant_currency_id'])) {
             $data['citypay_paylink_merchant_currency_id'] = $this->request->post['citypay_paylink_merchant_currency_id'];
         } else {
