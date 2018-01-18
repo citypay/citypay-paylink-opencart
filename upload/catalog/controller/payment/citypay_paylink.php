@@ -225,7 +225,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
         $this->load->model('checkout/order');
         $this->load->model('payment/citypay_paylink');
         
-        $gateway_info = $this->model_payment_citypay_paylink;
+//        $gateway_info = $this->model_payment_citypay_paylink;
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         
         if ($this->request->server['REQUEST_METHOD'] == 'POST') {
