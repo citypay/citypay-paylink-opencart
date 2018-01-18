@@ -148,8 +148,8 @@ class ControllerPaymentCityPayPaylink extends Controller {
 
                 if ($decodedResponse->result == 0x01)
                 {
-                    $token = $decodedResponse->id;
-                    $url = $decodedResponse->url;
+//                    $token = $decodedResponse->id;
+//                    $url = $decodedResponse->url;
                     
                     $this->response->redirect($decodedResponse->url);
                 }
@@ -165,8 +165,8 @@ class ControllerPaymentCityPayPaylink extends Controller {
                     $i_max = count($errors);
                     for ($i = 0x00; $i < $i_max; $i++) {
                         $error = $errors[$i];
-                        $errorMessage .= sprintf(
-                            template,
+                        $errorMessage = sprintf(
+                            $template,
                             $i,
                             $error->code,
                             $error->msg
@@ -199,8 +199,9 @@ class ControllerPaymentCityPayPaylink extends Controller {
             $req_stderr = stream_get_contents($curl_stderr, 4096);
             fclose($curl_stderr);
 
-            $req_errno = curl_errno($ch);
-            $req_error = curl_error($ch);
+//            $req_errno = curl_errno($ch);
+//            $req_error = curl_error($ch);
+            $httpsResponseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
             curl_close($ch);
             
@@ -299,7 +300,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
         }
         
         $this->load->model('checkout/order');
-        $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+//        $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
        
         $this->response->redirect($this->url->link('checkout/success'));
     }
@@ -336,7 +337,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
         }
         
         $this->load->model('checkout/order');
-        $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+//        $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         
         $this->response->redirect($this->url->link('checkout/failure'));
     }
