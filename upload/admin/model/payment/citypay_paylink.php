@@ -30,15 +30,15 @@ class ModelPaymentCityPayPaylink extends Model {
     }
   
     public function getOrder($order_id) {
-        $q = $this->db->query(
+        $db_query = $this->db->query(
             "SELECT * FROM `"
                 . DB_PREFIX
                 . "citypay_paylink_order` WHERE `order_id` = '"
                 . (int)$order_id
                 . "' LIMIT 1"
         );
-        if ($q->num_rows) {
-            $order = $q->row;
+        if ($db_query->num_rows) {
+            $order = $db_query->row;
             $order['transactions'] = $this->getTransactions($order['citypay_paylink_order_id']);
             return $order;
         } else {
