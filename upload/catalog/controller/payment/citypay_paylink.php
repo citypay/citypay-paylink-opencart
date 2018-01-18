@@ -439,7 +439,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
         //
 
 
-        $logger->write('JSON Postback---> '.(string)$jsonPostback); // getting postback info
+        $logger->write('JSON Postback Auth---> '.$jsonPostback->authorised); // getting postback info
 
         if ($jsonPostback->authorised == "true") {
             $this->model_checkout_order->addOrderHistory(

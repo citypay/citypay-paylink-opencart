@@ -46,12 +46,12 @@ class ModelPaymentCityPayPaylink extends Model {
         }
     }
     
-    private function getTransactions($citypay_paylink_order_id) {
+    private function getTransactions($cp_paylink_order_id) {
         $qry = $this->db->query(
             "SELECT * FROM `"
                 . DB_PREFIX
                 . "citypay_paylink_order_transaction` WHERE `citypay_paylink_order_id` = '"
-                . (int) $citypay_paylink_order_id
+                . (int) $cp_paylink_order_id
                 . "'"
         );
         if ($q->num_rows) {
@@ -61,12 +61,12 @@ class ModelPaymentCityPayPaylink extends Model {
         }
     }
     
-    public function addTransaction($citypay_paylink_order_id, $type, $total) {
+    public function addTransaction($cp_paylink_order_id, $type, $total) {
         $this->db->query(
             "INSERT INTO `"
                 . DB_PREFIX
                 . "citypay_paylink_order_transaction` SET `citypay_paylink_order_id` = '"
-                . (int) $citypay_paylink_order_id
+                . (int) $cp_paylink_order_id
                 . "', `created` = now(), `type` = '"
                 . $this->db->escape($type)
                 . "', `amount` = '"
