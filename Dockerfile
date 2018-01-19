@@ -12,7 +12,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     openssl \
     nginx php5-fpm php5-cli php5-mcrypt php5-gd php5-mysqlnd php5-curl \
-    wget \
     && rm -rf /var/lib/apt/lists/*
 
 # Run some install actions
@@ -23,7 +22,7 @@ ENV OC_VERSION=2.2.0.0
 # Install opencart
 RUN mkdir /opencart \
     && cd /opencart \
-    && wget https://github.com/opencart/opencart/releases/download/${OC_VERSION}/${OC_VERSION}-compiled.zip \
+    && curl -O "https://github.com/opencart/opencart/releases/download/${OC_VERSION}/${OC_VERSION}-compiled.zip" \
     && unzip ${OC_VERSION}-compiled.zip \
     && mv ${OC_VERSION}-compiled/upload/* . \
     && rm -rf ${OC_VERSION}-compiled ${OC_VERSION}-compiled.zip \
@@ -31,7 +30,7 @@ RUN mkdir /opencart \
     && chown -R www-data:www-data /opencart
 
 # Install ngrok to monitor for postbacks
-RUN curl -O https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-386.zip \
+RUN curl -O "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-386.zip" \
     && unzip ngrok-stable-linux-386.zip \
     && cp ngrok /usr/bin/ngrok
 
