@@ -3,7 +3,7 @@
 <project name="citypay-paylink-opencart" default="dist" basedir=".">
     
     <property name="package" value="${phing.project.name}" override="true" />
-    <property name="version" value="1.0.0" override="true" />
+    <property name="version" value="1.2.0" override="true" />
    
     <property name="builddir" value="${project.basedir}/build" override="true" />
     <property name="srcdir" value="${project.basedir}/upload" override="true" />
@@ -59,19 +59,16 @@
         <echo msg="Copying files to build directory..." />
         <mkdir dir="${builddir}/upload" />
         <copy todir="${builddir}/upload">
-	    <fileset dir=".">
-		<!-- <include name="README.md" /> -->
-	    </fileset>
-            <fileset dir="${srcdir}">
-                <!-- <include name="LICENCE.md" /> -->
-                <include name="admin/**/*.php" />
-                <include name="admin/**/*.png" />
-                <include name="admin/**/*.tpl" />
-                <include name="catalog/**/*.php" />
-                <include name="catalog/**/*.png" />
-                <include name="catalog/**/*.tpl" />
-                <include name="system/**/*.php" />
-            </fileset>
+        <fileset dir="${srcdir}">
+            <!-- <include name="LICENCE.md" /> -->
+            <include name="admin/**/*.php" />
+            <include name="admin/**/*.png" />
+            <include name="admin/**/*.tpl" />
+            <include name="catalog/**/*.php" />
+            <include name="catalog/**/*.png" />
+            <include name="catalog/**/*.tpl" />
+            <include name="system/**/*.php" />
+        </fileset>
         </copy>
         <if>
             <available file="${md2phpbb}" type="file" />
@@ -89,7 +86,7 @@
     <!-- ============================================  -->
     <target name="dist" depends="build">
         <echo msg="Creating archive..." />
-        <zip destfile="${builddir}/${package}.ocmod.zip">
+        <zip destfile="${builddir}/${package}.ocmod-${version}.zip">
             <fileset dir="${builddir}">
                 <include name="**/*" />
             </fileset>

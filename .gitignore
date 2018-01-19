@@ -4,3 +4,7 @@ tests/phpunit/vendor
 tests/phpunit/composer.lock
 tests/checkstyle.xml
 vendor
+/.idea/
+/.env
+/db/
+/build/
