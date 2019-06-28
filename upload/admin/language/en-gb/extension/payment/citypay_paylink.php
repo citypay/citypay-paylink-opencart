@@ -27,7 +27,7 @@ $_['entry_label_completed_order_status'] = 'Completed Order Status';
 $_['entry_label_cancelled_order_status'] = 'Cancelled Order Status';
 $_['entry_label_expired_order_status'] = 'Expired Order Status';
 $_['entry_label_failed_order_status'] = 'Failed Order Status';
-       
+
 $_['entry_label_status'] = 'Status';
 
 $_['entry_label_geo_zone'] = 'Geo Zone';
@@ -60,4 +60,5 @@ $_['message_success_save'] = 'Saved.';
 $_['error_permission'] = 'You do not have permissions to modify this module';
 $_['error_merchant_id'] = 'Merchant ID is required';
 $_['error_licence_key'] = 'Licence key is required';
+
 

@@ -2,7 +2,7 @@
 class ModelPaymentCityPayPaylink extends Model {
     
     public function getMethod($address, $total) {
-        $this->load->language('payment/citypay_paylink');
+        $this->load->language('extension/payment/citypay_paylink');
         $query = $this->db->query(
             "SELECT * FROM "
                 . DB_PREFIX
