@@ -1,5 +1,5 @@
 <?php
-class ModelPaymentCityPayPaylink extends Model {
+class ModelExtensionPaymentCityPayPaylink extends Model {
     
     public function getMethod($address, $total) {
         $this->load->language('extension/payment/citypay_paylink');
@@ -7,17 +7,17 @@ class ModelPaymentCityPayPaylink extends Model {
             "SELECT * FROM "
                 . DB_PREFIX
                 . "zone_to_geo_zone WHERE geo_zone_id = '"
-                . (int) $this->config->get('citypay_paylink_geo_zone_id')
+                . (int) $this->config->get('payment_citypay_paylink_geo_zone_id')
                 . "' AND country_id = '"
                 . (int) $address['country_id']
                 . "' AND (zone_id = '"
                 . (int) $address['zone_id']
                 . "' OR zone_id = '0')"
         );
-        if ($this->config->get('citypay_paylink_total') > 0
-            && $this->config->get('citypay_paylink_total') > $total) {
+        if ($this->config->get('payment_citypay_paylink_total') > 0
+            && $this->config->get('payment_citypay_paylink_total') > $total) {
             $status = false;
-        } elseif (!$this->config->get('citypay_paylink_geo_zone_id')) {
+        } elseif (!$this->config->get('payment_citypay_paylink_geo_zone_id')) {
             $status = true;
         } elseif ($query->num_rows) {
             $status = true;
@@ -32,14 +32,14 @@ class ModelPaymentCityPayPaylink extends Model {
                 'code'       => 'citypay_paylink',
                 'title'      => $this->language->get('text_title'),
                 'terms'      => '',
-                'sort_order' => $this->config->get('citypay_paylink_sort_order')
+                'sort_order' => $this->config->get('payment_citypay_paylink_sort_order')
             );
         }
         return $method_data;
     }
     
     public function getOrder($order_id) {
-        $qry = $this->db->query("SELECT * FROM `" . DB_PREFIX . "citypay_paylink_order` WHERE `order_id` = '" . (int)$order_id . "' LIMIT 1");
+        $qry = $this->db->query("SELECT * FROM `" . DB_PREFIX . "payment_citypay_paylink_order` WHERE `order_id` = '" . (int)$order_id . "' LIMIT 1");
         return $qry->row;
     }
     
@@ -48,7 +48,7 @@ class ModelPaymentCityPayPaylink extends Model {
     }
     
     public function addReference($order_id, $reference) {
-        $this->db->query("REPLACE INTO " . DB_PREFIX . "citypay_paylink_order SET order_id = " . (int)$order_id . ", transaction_reference = '" . $this->db->escape($reference) . "', `created` = now()");
+        $this->db->query("REPLACE INTO " . DB_PREFIX . "payment_citypay_paylink_order SET order_id = " . (int)$order_id . ", transaction_reference = '" . $this->db->escape($reference) . "', `created` = now()");
     }
     
     public function confirmOrder($order_id, $order_status_id, $comment = '', $notify = false) {
@@ -59,7 +59,7 @@ class ModelPaymentCityPayPaylink extends Model {
         $order_info = $this->model_checkout_order->getOrder($order_id);
         $cp_paylink_order = $this->getOrder($order_id);
         $amount = $this->currency->format($order_info['total'], $order_info['currency_code'], false, false);
-        switch($this->config->get('citypay_paylink_settle_status')){
+        switch($this->config->get('payment_citypay_paylink_settle_status')){
             case 0:
                 $trans_type = 'auth';
                 break;
@@ -75,8 +75,8 @@ class ModelPaymentCityPayPaylink extends Model {
             default :
                 $trans_type = 'default';
         }
-        $this->db->query("UPDATE `" . DB_PREFIX . "citypay_paylink_order` SET `settle_type`='" . $this->config->get('citypay_paylink_settle_status') . "', `modified` = now(), `currency_code` = '" . $this->db->escape($order_info['currency_code']) . "', `total` = '" . $amount . "' WHERE order_id = " . (int)$order_info['order_id']);
-        $this->db->query("INSERT INTO `" . DB_PREFIX . "citypay_paylink_order_transaction` SET `citypay_paylink_order_id` = '" . (int)$cp_paylink_order['citypay_paylink_order_id'] . "', `amount` = '" . $amount . "', type = '" . $trans_type . "',  `created` = now()");
+        $this->db->query("UPDATE `" . DB_PREFIX . "payment_citypay_paylink_order` SET `settle_type`='" . $this->config->get('payment_citypay_paylink_settle_status') . "', `modified` = now(), `currency_code` = '" . $this->db->escape($order_info['currency_code']) . "', `total` = '" . $amount . "' WHERE order_id = " . (int)$order_info['order_id']);
+        $this->db->query("INSERT INTO `" . DB_PREFIX . "payment_citypay_paylink_order_transaction` SET `citypay_paylink_order_id` = '" . (int)$cp_paylink_order['payment_citypay_paylink_order_id'] . "', `amount` = '" . $amount . "', type = '" . $trans_type . "',  `created` = now()");
     }
     
     public function updateOrder($order_id, $order_status_id, $comment = '', $notify = false) {

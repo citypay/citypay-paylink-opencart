@@ -10,10 +10,10 @@ class ControllerExtensionPaymentCitypayPaylink extends Controller {
          
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
      
-            $this->request->post['citypay_paylink_merchant_id'] = trim($this->request->post['citypay_paylink_merchant_id']);
-            $this->request->post['citypay_paylink_licence_key'] = trim($this->request->post['citypay_paylink_licence_key']);
+            $this->request->post['payment_citypay_paylink_merchant_id'] = trim($this->request->post['payment_citypay_paylink_merchant_id']);
+            $this->request->post['payment_citypay_paylink_licence_key'] = trim($this->request->post['payment_citypay_paylink_licence_key']);
             
-            $this->model_setting_setting->editSetting('citypay_paylink', $this->request->post);
+            $this->model_setting_setting->editSetting('payment_citypay_paylink', $this->request->post);
             $this->session->data['success'] = $this->language->get('message_success_save');
 //            echo "<pre />\n";
 //            print_r($this->request->post);
@@ -92,76 +92,76 @@ class ControllerExtensionPaymentCitypayPaylink extends Controller {
         //
         //
         //
-        if (isset($this->request->post['citypay_paylink_merchant_id'])) {
-            $data['citypay_paylink_merchant_id'] = $this->request->post['citypay_paylink_merchant_id'];
+        if (isset($this->request->post['payment_citypay_paylink_merchant_id'])) {
+            $data['payment_citypay_paylink_merchant_id'] = $this->request->post['payment_citypay_paylink_merchant_id'];
         } else {
-            $data['citypay_paylink_merchant_id'] = $this->config->get('citypay_paylink_merchant_id');
+            $data['payment_citypay_paylink_merchant_id'] = $this->config->get('payment_citypay_paylink_merchant_id');
         }
         
-        if (isset($this->request->post['citypay_paylink_licence_key'])) {
-            $data['citypay_paylink_licence_key'] = $this->request->post['citypay_paylink_licence_key'];
+        if (isset($this->request->post['payment_citypay_paylink_licence_key'])) {
+            $data['payment_citypay_paylink_licence_key'] = $this->request->post['payment_citypay_paylink_licence_key'];
         } else {
-            $data['citypay_paylink_licence_key'] = $this->config->get('citypay_paylink_licence_key');
+            $data['payment_citypay_paylink_licence_key'] = $this->config->get('payment_citypay_paylink_licence_key');
         }
 
-        if (isset($this->request->post['citypay_paylink_postback_url'])) {
-            $data['citypay_paylink_postback_url'] = $this->request->post['citypay_paylink_postback_url'];
+        if (isset($this->request->post['payment_citypay_paylink_postback_url'])) {
+            $data['payment_citypay_paylink_postback_url'] = $this->request->post['payment_citypay_paylink_postback_url'];
         } else {
-            $data['citypay_paylink_postback_url'] = $this->config->get('citypay_paylink_postback_url');
+            $data['payment_citypay_paylink_postback_url'] = $this->config->get('payment_citypay_paylink_postback_url');
         }
 
-        if (isset($this->request->post['citypay_paylink_merchant_currency_id'])) {
-            $data['citypay_paylink_merchant_currency_id'] = $this->request->post['citypay_paylink_merchant_currency_id'];
+        if (isset($this->request->post['payment_citypay_paylink_merchant_currency_id'])) {
+            $data['payment_citypay_paylink_merchant_currency_id'] = $this->request->post['payment_citypay_paylink_merchant_currency_id'];
         } else {
-            $data['citypay_paylink_merchant_currency_id'] = $this->config->get('citypay_paylink_merchant_currency_id');
+            $data['payment_citypay_paylink_merchant_currency_id'] = $this->config->get('payment_citypay_paylink_merchant_currency_id');
         }
         
-        if (isset($this->request->post['citypay_paylink_new_order_status_id'])) {
-            $data['citypay_paylink_new_order_status_id'] = $this->request->post['citypay_paylink_new_order_status_id'];
+        if (isset($this->request->post['payment_citypay_paylink_new_order_status_id'])) {
+            $data['payment_citypay_paylink_new_order_status_id'] = $this->request->post['payment_citypay_paylink_new_order_status_id'];
         } else {
-            $data['citypay_paylink_new_order_status_id'] = $this->config->get('citypay_paylink_new_order_status_id');
+            $data['payment_citypay_paylink_new_order_status_id'] = $this->config->get('payment_citypay_paylink_new_order_status_id');
         }
         
-        if (isset($this->request->post['citypay_paylink_completed_order_status_id'])) {
-            $data['citypay_paylink_completed_order_status_id'] = $this->request->post['citypay_paylink_completed_order_status_id'];
+        if (isset($this->request->post['payment_citypay_paylink_completed_order_status_id'])) {
+            $data['payment_citypay_paylink_completed_order_status_id'] = $this->request->post['payment_citypay_paylink_completed_order_status_id'];
         } else {
-            $data['citypay_paylink_completed_order_status_id'] = $this->config->get('citypay_paylink_completed_order_status_id');
+            $data['payment_citypay_paylink_completed_order_status_id'] = $this->config->get('payment_citypay_paylink_completed_order_status_id');
         }
         
-        if (isset($this->request->post['citypay_paylink_cancelled_order_status_id'])) {
-            $data['citypay_paylink_cancelled_order_status_id'] = $this->request->post['citypay_paylink_cancelled_order_status_id'];
+        if (isset($this->request->post['payment_citypay_paylink_cancelled_order_status_id'])) {
+            $data['payment_citypay_paylink_cancelled_order_status_id'] = $this->request->post['payment_citypay_paylink_cancelled_order_status_id'];
         } else {
-            $data['citypay_paylink_cancelled_order_status_id'] = $this->config->get('citypay_paylink_cancelled_order_status_id');
+            $data['payment_citypay_paylink_cancelled_order_status_id'] = $this->config->get('payment_citypay_paylink_cancelled_order_status_id');
         }
         
-        if (isset($this->request->post['citypay_paylink_expired_order_status_id'])) {
-            $data['citypay_paylink_expired_order_status_id'] = $this->request->post['citypay_paylink_expired_order_status_id'];
+        if (isset($this->request->post['payment_citypay_paylink_expired_order_status_id'])) {
+            $data['payment_citypay_paylink_expired_order_status_id'] = $this->request->post['payment_citypay_paylink_expired_order_status_id'];
         } else {
-            $data['citypay_paylink_expired_order_status_id'] = $this->config->get('citypay_paylink_expired_order_status_id');
+            $data['payment_citypay_paylink_expired_order_status_id'] = $this->config->get('payment_citypay_paylink_expired_order_status_id');
         }
         
-        if (isset($this->request->post['citypay_paylink_failed_order_status_id'])) {
-            $data['citypay_paylink_failed_order_status_id'] = $this->request->post['citypay_paylink_failed_order_status_id'];
+        if (isset($this->request->post['payment_citypay_paylink_failed_order_status_id'])) {
+            $data['payment_citypay_paylink_failed_order_status_id'] = $this->request->post['payment_citypay_paylink_failed_order_status_id'];
         } else {
-            $data['citypay_paylink_failed_order_status_id'] = $this->config->get('citypay_paylink_failed_order_status_id');
+            $data['payment_citypay_paylink_failed_order_status_id'] = $this->config->get('payment_citypay_paylink_failed_order_status_id');
         }
         
-        if (isset($this->request->post['citypay_paylink_status'])) {
-            $data['citypay_paylink_status'] = $this->request->post['citypay_paylink_status'];
+        if (isset($this->request->post['payment_citypay_paylink_status'])) {
+            $data['payment_citypay_paylink_status'] = $this->request->post['payment_citypay_paylink_status'];
         } else {
-            $data['citypay_paylink_status'] = $this->config->get('citypay_paylink_status');
+            $data['payment_citypay_paylink_status'] = $this->config->get('payment_citypay_paylink_status');
         }
         
-        if (isset($this->request->post['citypay_paylink_geo_zone_id'])) {
-            $data['citypay_paylink_geo_zone_id'] = $this->request->post['citypay_paylink_geo_zone_id'];
+        if (isset($this->request->post['payment_citypay_paylink_geo_zone_id'])) {
+            $data['payment_citypay_paylink_geo_zone_id'] = $this->request->post['payment_citypay_paylink_geo_zone_id'];
         } else {
-            $data['citypay_paylink_geo_zone_id'] = $this->config->get('citypay_paylink_geo_zone_id');
+            $data['payment_citypay_paylink_geo_zone_id'] = $this->config->get('payment_citypay_paylink_geo_zone_id');
         }
         
-        if (isset($this->request->post['citypay_paylink_sort_order'])) {
-            $data['citypay_paylink_sort_order'] = $this->request->post['citypay_paylink_sort_order'];
+        if (isset($this->request->post['payment_citypay_paylink_sort_order'])) {
+            $data['payment_citypay_paylink_sort_order'] = $this->request->post['payment_citypay_paylink_sort_order'];
         } else {
-            $data['citypay_paylink_sort_order'] = $this->config->get('citypay_paylink_sort_order');
+            $data['payment_citypay_paylink_sort_order'] = $this->config->get('payment_citypay_paylink_sort_order');
         }
          
         $this->load->model('localisation/order_status');
@@ -183,11 +183,11 @@ class ControllerExtensionPaymentCitypayPaylink extends Controller {
             $this->error['warning'] = $this->language->get('error_permission');
         }
         
-        if (!$this->request->post['citypay_paylink_merchant_id']) {
+        if (!$this->request->post['payment_citypay_paylink_merchant_id']) {
             $this->error['merchant_id'] = $this->language->get('error_merchant_id');
         }
         
-        if (!$this->request->post['citypay_paylink_licence_key']) {
+        if (!$this->request->post['payment_citypay_paylink_licence_key']) {
             $this->error['licence_key'] = $this->language->get('error_licence_key');
         }
         

@@ -27,7 +27,7 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
 
         $this->model_checkout_order->addOrderHistory(
             $order['order_id'],
-            $this->config->get('citypay_paylink_new_order_status_id'),
+            $this->config->get('payment_citypay_paylink_new_order_status_id'),
             $this->language->get('message_payment_transaction_status_advice_before_token_request')
         );
         
@@ -60,8 +60,8 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
         //
         $pbUrl=$this->url->link('extension/payment/citypay_paylink/postback') . '&order_id=' . $order['order_id'];
 
-        if(trim($this->config->get('citypay_paylink_postback_url')) != ''){
-            $customURL = trim($this->config->get('citypay_paylink_postback_url'));
+        if(trim($this->config->get('payment_citypay_paylink_postback_url')) != ''){
+            $customURL = trim($this->config->get('payment_citypay_paylink_postback_url'));
             $pbUrl = preg_replace("/(http)(.*)(\?.*)/", $customURL."$3", $pbUrl);
         }
 
@@ -79,8 +79,8 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
         //  Token request setup
         //
         $tokenRequest = array();
-        $tokenRequest['merchantId'] = $this->config->get('citypay_paylink_merchant_id');
-        $tokenRequest['licenceKey'] = $this->config->get('citypay_paylink_licence_key');
+        $tokenRequest['merchantId'] = $this->config->get('payment_citypay_paylink_merchant_id');
+        $tokenRequest['licenceKey'] = $this->config->get('payment_citypay_paylink_licence_key');
         $tokenRequest['config'] = $tokenConfig;
         $tokenRequest['test'] = true;
         $tokenRequest['identifier'] = '[OrderId: '
@@ -281,7 +281,7 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
             return;
         }
             
-        if (!$this->validate($this->config->get('citypay_paylink_licence_key'))) {
+        if (!$this->validate($this->config->get('payment_citypay_paylink_licence_key'))) {
             $this->_log(
                 $this->language->get('error_paylink_response_could_not_be_validated'),
                 $this->request->post
@@ -318,7 +318,7 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
             return;
         }
             
-        if (!$this->validate($this->config->get('citypay_paylink_licence_key'))) {
+        if (!$this->validate($this->config->get('payment_citypay_paylink_licence_key'))) {
             $this->_log(
                 $this->language->get('error_paylink_response_could_not_be_validated'),
                 $this->request->post
@@ -371,7 +371,7 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
             $this->_log($errorMessage);
             $this->model_checkout_order->addOrderHistory(
                 $order['order_id'],
-                $this->config->get('citypay_paylink_failed_order_status_id'),
+                $this->config->get('payment_citypay_paylink_failed_order_status_id'),
                 $errorMessage
             );
             return;
@@ -389,7 +389,7 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
             $this->_log($errorMessage);
             $this->model_checkout_order->addOrderHistory(
                 $order['order_id'],
-                $this->config->get('citypay_paylink_failed_order_status_id'),
+                $this->config->get('payment_citypay_paylink_failed_order_status_id'),
                 $errorMessage
             );
             return;
@@ -408,21 +408,21 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
             $this->_log($errorMessage);
             $this->model_checkout_order->addOrderHistory(
                 $order['order_id'],
-                $this->config->get('citypay_paylink_failed_order_status_id'),
+                $this->config->get('payment_citypay_paylink_failed_order_status_id'),
                 $errorMessage
             );
             return;
         }
         
         $this->request->post = object_to_array($jsonPostback);
-        if (!$this->validate($this->config->get('citypay_paylink_licence_key'))) {
+        if (!$this->validate($this->config->get('payment_citypay_paylink_licence_key'))) {
             http_response_code(400);
             flush(); 
             $errorMessage = $this->language->get('error_postback_message_body_not_capable_of_validation');
             $this->_log($errorMessage);
             $this->model_checkout_order->addOrderHistory(
                 $order['order_id'],
-                $this->config->get('citypay_paylink_failed_order_status_id'),
+                $this->config->get('payment_citypay_paylink_failed_order_status_id'),
                 $errorMessage
             );
             return;
@@ -444,7 +444,7 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
         if ($jsonPostback->authorised == "true") {
             $this->model_checkout_order->addOrderHistory(
                 $order['order_id'],
-                $this->config->get('citypay_paylink_completed_order_status_id'),
+                $this->config->get('payment_citypay_paylink_completed_order_status_id'),
                 sprintf(
                     $this->language->get('message_payment_transaction_status_advice_on_postback_authorised'),
                     $this->request->post['authcode']
@@ -454,12 +454,12 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
             $errorcode = trim($this->request->post['errorcode']);
             switch ($errorcode) {
             case '080':
-                $status = $this->config->get('citypay_paylink_cancelled_order_status_id');
+                $status = $this->config->get('payment_citypay_paylink_cancelled_order_status_id');
                 $message = $this->language->get('message_payment_transaction_status_advice_on_postback_cancelled');
                 break;
                 
             default:
-                $status = $this->config->get('citypay_paylink_failed_order_status_id');
+                $status = $this->config->get('payment_citypay_paylink_failed_order_status_id');
                 $message = $this->language->get('message_payment_transaction_status_advice_on_postback_not_authorised');
                 break;
             }

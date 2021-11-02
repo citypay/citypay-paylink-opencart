@@ -3,8 +3,6 @@ services:
     ocdb:
         container_name: ocdb
         image: mysql:5.7
-        volumes:
-                - ./db:/var/lib/mysql
         environment:
               - MYSQL_DATABASE=ocdb
               - MYSQL_ROOT_PASSWORD=P4ssw0rd!
@@ -13,27 +11,17 @@ services:
                 - ocnet
     opencart:
         container_name: opencart
-        image: citypay/opencart:1.1.1
+        image: citypay/opencart-php7.3:3.0.3.8
         ports:
                 - 127.0.0.1:80:80
+                - 127.0.0.1:4040:4040
         environment:
-               - CITYPAY_PLUGIN_VERSION= 1.1.1
+               - CITYPAY_PLUGIN_VERSION= 2.0.0
         depends_on:
                 - ocdb
         env_file: .env
         networks:
                 - ocnet
-#        volumes:
-#          - ./upload/catalog/language/en-gb/extension/payment/citypay_paylink.php:/opencart/catalog/language/en-gb/extension/payment/citypay_paylink.php
-#          - ./upload/catalog/controller/extension/payment/citypay_paylink.php:/opencart/catalog/controller/extension/payment/citypay_paylink.php
-#          - ./upload/catalog/model/extension/payment/citypay_paylink.php:/opencart/catalog/model/extension/payment/citypay_paylink.php
-#          - ./upload/catalog/view/theme/default/template/extension/payment/citypay_paylink.twig:/opencart/catalog/view/theme/default/template/extension/payment/citypay_paylink.twig
-#          - ./upload/admin/language/en-gb/extension/payment/citypay_paylink.php:/opencart/admin/language/en-gb/extension/payment/citypay_paylink.php
-#          - ./upload/admin/controller/extension/payment/citypay_paylink.php:/opencart/admin/controller/extension/payment/citypay_paylink.php
-#          - ./upload/admin/model/extension/payment/citypay_paylink.php:/opencart/admin/model/extension/payment/citypay_paylink.php
-#          - ./upload/admin/view/template/extension/payment/citypay_paylink.twig:/opencart/admin/view/template/extension/payment/citypay_paylink.twig
-#          - ./upload/admin/view/image/payment/citypay_paylink.png:/opencart/admin/view/image/payment/citypay_paylink.png
-
 networks:
     ocnet:
       driver: bridge

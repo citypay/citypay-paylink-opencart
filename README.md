@@ -22,14 +22,13 @@ sophisticated functionality, as follows, is not presently supported -
 5. processing refunds on receipt of returned goods, or
    cancellation of orders.
 
-CityPay Paylink Plugin for OpenCart does not, at present, make use of
-the CityPay SDK for PHP [https://github.com/citypay/php-sdk](https://github.com/citypay/php-sdk).
-
 Version support
 ---------------
+OpenCart version 3.0.3.8.
 
-CityPay Paylink Plugin for OpenCart has been developed to work with
-OpenCart version 2.2.0.0; no other versions are presently supported.
+PHP version
+---------------
+PHP 7.3 and later.
 
 Building the plugin
 -------------------
@@ -38,7 +37,7 @@ CityPay Paylink Plugin for OpenCart uses a Phing build scripts to
 enable the preparation of a ZIP file suitable for importing the
 extension to OpenCart.
 
-To build the ZIP file, run `phing` in the main project directory
+Download [PHing](https://www.phing.info) and to build the ZIP file, run `php phing-version.phar` in the main project directory
 without any arguments. The resultant ZIP file is located in the
 `build` directory.
 
@@ -46,16 +45,14 @@ Installing the plugin
 ---------------------
 
 To install the plugin to OpenCart, login to the OpenCart administration
-panel, select the "Extension Installer" under the 'jigsaw piece' menu,
+panel, select the "Installer" under the 'Extensions' menu,
 upload the ZIP generated in the previous step; and await confirmation
 that the install process as been performed.
 
-Once installed, select the 'jigsaw piece' menu again, and then select
-"Payments" to obtain the list of available payment methods.
-
-To enable the plugin, it is necessary to mark it as enabled from the
-OpenCart applications' perspective by clicking the "enable" button,
-and also to configure the plugin with details of your merchant account,
+Once installed, select the 'Extensions' menu again, and then select
+"Extensions" to obtain the list of available extensions. 
+Select 'Payments' extension type, find 'CityPay Paylink Hosted Form' plugin and install it. 
+With the plugin installed click in the action 'Edit' and fill in the configuration form with details of your merchant account,
 the licence key associated with your merchant account, the currency
 available for use with the plugin, the geographical zone associated with
 the payment method, and any applicable sort order for the payment method.
@@ -67,10 +64,3 @@ Support
 -------
 
 For support, please contact [support@citypay.com](mailto:support@citypay.com)
-
-Test suite support
-------------------
-
-Although some effort has been made to enable unit testing of the plugin
-using a fork of the [https://github.com/openbaypro/opencart-test-suite.git](https://github.com/openbaypro/opencart-test-suite.git)
-repository, unit testing is not presently supported.

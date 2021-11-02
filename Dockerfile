@@ -1,41 +1,45 @@
-FROM ubuntu:14.04
+FROM ubuntu:20.04
 LABEL maintainer="Michael Martins <michael.martins@citypay.com>"
+
+ENV DEBIAN_FRONTEND noninteractive
 
 # Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
     less \
     vim \
-    python-software-properties \
     software-properties-common \
     git \
     curl \
+    jq \
     openssl \
-    nginx php5-fpm php5-cli php5-mcrypt php5-gd php5-mysqlnd php5-curl \
+    nginx \
     && rm -rf /var/lib/apt/lists/*
 
-# Run some install actions
-RUN php5enmod mcrypt
+RUN apt-add-repository ppa:ondrej/php && apt update && apt-get install -y php7.3-fpm php7.3-cli php7.3-mcrypt php7.3-gd php7.3-mysqlnd php7.3-curl php7.3-zip php7.3-xml
 
-ENV OC_VERSION=3.0.2.0
+# Run some install actions
+RUN phpenmod mcrypt
+
+ENV OC_VERSION=3.0.3.8
 
 # Install opencart
 RUN mkdir /opencart \
     && cd /opencart \
-    && curl -L -O "https://github.com/opencart/opencart/releases/download/${OC_VERSION}/${OC_VERSION}-OpenCart.zip" \
-    && unzip ${OC_VERSION}-OpenCart.zip -d ${OC_VERSION}-OpenCart \
-    && mv ${OC_VERSION}-OpenCart/upload/* . \
-    && rm -rf ${OC_VERSION}-OpenCart ${OC_VERSION}-OpenCart.zip \
+    && curl -L -O "https://github.com/opencart/opencart/releases/download/${OC_VERSION}/opencart-${OC_VERSION}.zip" \
+    && unzip opencart-${OC_VERSION}.zip -d opencart-${OC_VERSION} \
+    && mv opencart-${OC_VERSION}/upload/* . \
+    && rm -rf opencart-${OC_VERSION} opencart-${OC_VERSION}.zip \
     && rm -rf /usr/share/nginx/html \
     && chown -R www-data:www-data /opencart
 
 # Install ngrok to monitor for postbacks
-RUN curl -O "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-386.zip" \
+RUN curl -O "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-386.zip" -k \
     && unzip ngrok-stable-linux-386.zip \
     && cp ngrok /usr/bin/ngrok
 
 # Setup PHP
-RUN sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/' /etc/php5/fpm/php.ini
+RUN sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/' /etc/php/7.3/fpm/php.ini
 
 RUN echo '\ndisplay_errors = 1;\nerror_reporting = E_ALL;' >> /opencart/php.ini
 
@@ -56,7 +60,6 @@ RUN touch /opencart/config.php \
 
 #ENV CITYPAY_PLUGIN_VERSION 1.1.0
 
-
 # forward request and error logs to docker log collector
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 	&& ln -sf /dev/stderr /var/log/nginx/error.log
@@ -64,7 +67,6 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 EXPOSE 80
 
 STOPSIGNAL SIGTERM
+RUN chmod +x opt/startup.sh
 
 CMD ["/opt/startup.sh"]
-
-#https://github.com/opencart/opencart/releases/download/3.0.2.0/3.0.2.0-OpenCart.zip
