@@ -3,10 +3,10 @@
 <project name="citypay-paylink-opencart" default="dist" basedir=".">
     
     <property name="package" value="${phing.project.name}" override="true" />
-    <property name="version" value="1.2.0" override="true" />
+    <property name="version" value="3.0.0" override="true" />
    
     <property name="builddir" value="${project.basedir}/build" override="true" />
-    <property name="srcdir" value="${project.basedir}/upload" override="true" />
+    <property name="srcdir" value="${project.basedir}" override="true" />
     
     <property name="extdirectorydir" value="${project.basedir}/directory" override="true" />
 
@@ -57,17 +57,17 @@
     <!-- ============================================  -->
     <target name="build" depends="prepare,phpcs">
         <echo msg="Copying files to build directory..." />
-        <mkdir dir="${builddir}/upload" />
-        <copy todir="${builddir}/upload">
+        <mkdir dir="${builddir}" />
+        <copy todir="${builddir}">
         <fileset dir="${srcdir}">
             <!-- <include name="LICENCE.md" /> -->
-            <include name="admin/**/*.php" />
-            <include name="admin/**/*.png" />
-            <include name="admin/**/*.tpl" />
-            <include name="catalog/**/*.php" />
-            <include name="catalog/**/*.png" />
-            <include name="catalog/**/*.tpl" />
-            <include name="system/**/*.php" />
+            <include name="upload/admin/**/*.php" />
+            <include name="upload/admin/**/*.png" />
+            <include name="upload/admin/**/*.twig" />
+            <include name="upload/catalog/**/*.php" />
+            <include name="upload/catalog/**/*.png" />
+            <include name="upload/catalog/**/*.twig" />
+            <include name="install.xml" />
         </fileset>
         </copy>
         <if>
@@ -86,7 +86,7 @@
     <!-- ============================================  -->
     <target name="dist" depends="build">
         <echo msg="Creating archive..." />
-        <zip destfile="${builddir}/${package}.ocmod-${version}.zip">
+        <zip destfile="${builddir}/${package}-${version}.ocmod.zip">
             <fileset dir="${builddir}">
                 <include name="**/*" />
             </fileset>

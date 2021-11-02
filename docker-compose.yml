@@ -13,28 +13,26 @@ services:
                 - ocnet
     opencart:
         container_name: opencart
-        image: citypay/opencart:latest
+        image: citypay/opencart:1.1.1
         ports:
                 - 127.0.0.1:80:80
         environment:
-               - CITYPAY_PLUGIN_VERSION= 1.1.0
+               - CITYPAY_PLUGIN_VERSION= 1.1.1
         depends_on:
                 - ocdb
         env_file: .env
         networks:
                 - ocnet
-        volumes:
-          - ./upload/catalog/language/en-gb/payment/citypay_paylink.php:/opencart/catalog/language/en-gb/payment/citypay_paylink.php
-          - ./upload/catalog/language/english/payment/citypay_paylink.php:/opencart/catalog/language/english/payment/citypay_paylink.php
-          - ./upload/catalog/controller/payment/citypay_paylink.php:/opencart/catalog/controller/payment/citypay_paylink.php
-          - ./upload/catalog/model/payment/citypay_paylink.php:/opencart/catalog/model/payment/citypay_paylink.php
-          - ./upload/catalog/view/theme/default/template/payment/citypay_paylink.tpl:/opencart/catalog/view/theme/default/template/payment/citypay_paylink.tpl
-          - ./upload/admin/language/en-gb/payment/citypay_paylink.php:/opencart/admin/language/en-gb/payment/citypay_paylink.php
-          - ./upload/admin/language/english/payment/citypay_paylink.php:/opencart/admin/language/english/payment/citypay_paylink.php
-          - ./upload/admin/controller/payment/citypay_paylink.php:/opencart/admin/controller/payment/citypay_paylink.php
-          - ./upload/admin/model/payment/citypay_paylink.php:/opencart/admin/model/payment/citypay_paylink.php
-          - ./upload/admin/view/template/payment/citypay_paylink.tpl:/opencart/admin/view/template/payment/citypay_paylink.tpl
-          - ./upload/admin/view/image/payment/citypay_paylink.png:/opencart/admin/view/image/payment/citypay_paylink.png
+#        volumes:
+#          - ./upload/catalog/language/en-gb/extension/payment/citypay_paylink.php:/opencart/catalog/language/en-gb/extension/payment/citypay_paylink.php
+#          - ./upload/catalog/controller/extension/payment/citypay_paylink.php:/opencart/catalog/controller/extension/payment/citypay_paylink.php
+#          - ./upload/catalog/model/extension/payment/citypay_paylink.php:/opencart/catalog/model/extension/payment/citypay_paylink.php
+#          - ./upload/catalog/view/theme/default/template/extension/payment/citypay_paylink.twig:/opencart/catalog/view/theme/default/template/extension/payment/citypay_paylink.twig
+#          - ./upload/admin/language/en-gb/extension/payment/citypay_paylink.php:/opencart/admin/language/en-gb/extension/payment/citypay_paylink.php
+#          - ./upload/admin/controller/extension/payment/citypay_paylink.php:/opencart/admin/controller/extension/payment/citypay_paylink.php
+#          - ./upload/admin/model/extension/payment/citypay_paylink.php:/opencart/admin/model/extension/payment/citypay_paylink.php
+#          - ./upload/admin/view/template/extension/payment/citypay_paylink.twig:/opencart/admin/view/template/extension/payment/citypay_paylink.twig
+#          - ./upload/admin/view/image/payment/citypay_paylink.png:/opencart/admin/view/image/payment/citypay_paylink.png
 
 networks:
     ocnet:

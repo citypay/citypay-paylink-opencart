@@ -1,53 +1,26 @@
 <?php
-/**
- * Class responsible for displaying the configuration form for the extension.
- * 
- */
-class ControllerPaymentCityPayPaylink extends Controller {
-    
+class ControllerExtensionPaymentCitypayPaylink extends Controller {
     private $error = array();
-    
-    /**
-     * Method responsible for performing everything necessary to install the
-     * extension.
-     */
-    public function install() {
-        
-    }
-    
-    /**
-     * Method responsible for performing everything necessary to uninstall the
-     * extension.
-     */
-    public function uninstall() {
-        
-    }
-    
-    /**
-     * 
-     */
+
     public function index() {
-        //
-        //
-        //
-        $this->language->load('payment/citypay_paylink');
+
+        $this->load->language('extension/payment/citypay_paylink');
         $this->document->setTitle($this->language->get('document_title_configuration'));
         $this->load->model('setting/setting');
-        
-        //
-        //
-        //
-        if (($this->request->server['REQUEST_METHOD'] == 'POST')
-            && $this->validate()) {
-            //
-            // Trim values passed as parameters
-            //
+         
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+     
             $this->request->post['citypay_paylink_merchant_id'] = trim($this->request->post['citypay_paylink_merchant_id']);
             $this->request->post['citypay_paylink_licence_key'] = trim($this->request->post['citypay_paylink_licence_key']);
             
             $this->model_setting_setting->editSetting('citypay_paylink', $this->request->post);
             $this->session->data['success'] = $this->language->get('message_success_save');
-            $this->response->redirect($this->url->link('extension/payment', 'token='.$this->session->data['token'], 'SSL'));
+//            echo "<pre />\n";
+//            print_r($this->request->post);
+//            echo "</pre>\n";
+//
+//            exit;
+            $this->response->redirect($this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true));
         }
         
         //
@@ -78,9 +51,9 @@ class ControllerPaymentCityPayPaylink extends Controller {
         $data['button_label_cancel'] = $this->language->get('button_label_cancel');
         
         $data['values_currencies'] = $this->language->get('values_currencies');
-        
-        $data['action'] = $this->url->link('payment/citypay_paylink', 'token='.$this->session->data['token'], 'SSL');
-        $data['cancel'] = $this->url->link('extension/payment', 'token='.$this->session->data['token'], 'SSL');
+
+        $data['action'] = $this->url->link('extension/payment/citypay_paylink', 'user_token='.$this->session->data['user_token'], true);
+        $data['cancel'] = $this->url->link('marketplace/extension', 'user_token='.$this->session->data['user_token'].'&type=payment', true);
         
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -101,20 +74,21 @@ class ControllerPaymentCityPayPaylink extends Controller {
         }
         
         $data['breadcrumbs'] = array();
+
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], true)
+            'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], true)
         );
         
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_payment'),
-            'href' => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], true)
+            'href' => $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'].'&type=payment', true)
         );
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('payment/citypay_paylink', 'token=' . $this->session->data['token'], true)
+            'href' => $this->url->link('extension/payment/citypay_paylink', 'user_token=' . $this->session->data['user_token'], true)
         );
-   
+
         //
         //
         //
@@ -200,12 +174,12 @@ class ControllerPaymentCityPayPaylink extends Controller {
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
         
-        $this->response->setOutput($this->load->view('payment/citypay_paylink', $data));
+        $this->response->setOutput($this->load->view('extension/payment/citypay_paylink', $data));
     }
     
     protected function validate() {
         
-        if (!$this->user->hasPermission('modify', 'payment/citypay_paylink')) {
+        if (!$this->user->hasPermission('modify', 'extension/payment/citypay_paylink')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
         

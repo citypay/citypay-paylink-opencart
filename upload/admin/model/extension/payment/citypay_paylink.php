@@ -1,6 +1,6 @@
 <?php
 class ModelPaymentCityPayPaylink extends Model {
-    
+
     public function install() {
         $this->db->query("
             CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "citypay_paylink_order` (
@@ -23,19 +23,20 @@ class ModelPaymentCityPayPaylink extends Model {
               PRIMARY KEY (`citypay_paylink_order_transaction_id`)
             ) ENGINE=MyISAM DEFAULT COLLATE=utf8_general_ci;");
     }
-    
+
     public function uninstall() {
-        $this->db->query("DROP TABLE IF EXISTS " . DB_PREFIX . "citypay_paylink_order");
-        $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "citypay_paylink_order_transaction`;");
+        //not recommended, dangerous!
+//        $this->db->query("DROP TABLE IF EXISTS " . DB_PREFIX . "citypay_paylink_order");
+//        $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "citypay_paylink_order_transaction`;");
     }
-  
+
     public function getOrder($order_id) {
         $db_query = $this->db->query(
             "SELECT * FROM `"
-                . DB_PREFIX
-                . "citypay_paylink_order` WHERE `order_id` = '"
-                . (int)$order_id
-                . "' LIMIT 1"
+            . DB_PREFIX
+            . "citypay_paylink_order` WHERE `order_id` = '"
+            . (int)$order_id
+            . "' LIMIT 1"
         );
         if ($db_query->num_rows) {
             $order = $db_query->row;
@@ -45,14 +46,14 @@ class ModelPaymentCityPayPaylink extends Model {
             return false;
         }
     }
-    
+
     private function getTransactions($cp_paylink_order_id) {
         $qry = $this->db->query(
             "SELECT * FROM `"
-                . DB_PREFIX
-                . "citypay_paylink_order_transaction` WHERE `citypay_paylink_order_id` = '"
-                . (int) $cp_paylink_order_id
-                . "'"
+            . DB_PREFIX
+            . "citypay_paylink_order_transaction` WHERE `citypay_paylink_order_id` = '"
+            . (int) $cp_paylink_order_id
+            . "'"
         );
         if ($q->num_rows) {
             return $q->rows;
@@ -60,22 +61,21 @@ class ModelPaymentCityPayPaylink extends Model {
             return false;
         }
     }
-    
+
     public function addTransaction($cp_paylink_order_id, $type, $total) {
         $this->db->query(
             "INSERT INTO `"
-                . DB_PREFIX
-                . "citypay_paylink_order_transaction` SET `citypay_paylink_order_id` = '"
-                . (int) $cp_paylink_order_id
-                . "', `created` = now(), `type` = '"
-                . $this->db->escape($type)
-                . "', `amount` = '"
-                . (double)$total . "'");
+            . DB_PREFIX
+            . "citypay_paylink_order_transaction` SET `citypay_paylink_order_id` = '"
+            . (int) $cp_paylink_order_id
+            . "', `created` = now(), `type` = '"
+            . $this->db->escape($type)
+            . "', `amount` = '"
+            . (double)$total . "'");
     }
-    
+
     public function logger($message) {
         $log = new Log('citypay_paylink.log');
         $log->write($message);
     }
 }
-

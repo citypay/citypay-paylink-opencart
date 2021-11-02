@@ -17,15 +17,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Run some install actions
 RUN php5enmod mcrypt
 
-ENV OC_VERSION=2.2.0.0
+ENV OC_VERSION=3.0.2.0
 
 # Install opencart
 RUN mkdir /opencart \
     && cd /opencart \
-    && curl -O "https://github.com/opencart/opencart/releases/download/${OC_VERSION}/${OC_VERSION}-compiled.zip" \
-    && unzip ${OC_VERSION}-compiled.zip \
-    && mv ${OC_VERSION}-compiled/upload/* . \
-    && rm -rf ${OC_VERSION}-compiled ${OC_VERSION}-compiled.zip \
+    && curl -L -O "https://github.com/opencart/opencart/releases/download/${OC_VERSION}/${OC_VERSION}-OpenCart.zip" \
+    && unzip ${OC_VERSION}-OpenCart.zip -d ${OC_VERSION}-OpenCart \
+    && mv ${OC_VERSION}-OpenCart/upload/* . \
+    && rm -rf ${OC_VERSION}-OpenCart ${OC_VERSION}-OpenCart.zip \
     && rm -rf /usr/share/nginx/html \
     && chown -R www-data:www-data /opencart
 
@@ -36,6 +36,8 @@ RUN curl -O "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-386.zip" \
 
 # Setup PHP
 RUN sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/' /etc/php5/fpm/php.ini
+
+RUN echo '\ndisplay_errors = 1;\nerror_reporting = E_ALL;' >> /opencart/php.ini
 
 # Setup Opencart
 COPY docker/default /etc/nginx/sites-available/default
@@ -52,7 +54,7 @@ RUN touch /opencart/config.php \
 # do not delete install directory as this probably will be a frash run
 #    && rm -rf /opencart/install
 
-ENV CITYPAY_PLUGIN_VERSION 1.1.0
+#ENV CITYPAY_PLUGIN_VERSION 1.1.0
 
 
 # forward request and error logs to docker log collector
@@ -64,3 +66,5 @@ EXPOSE 80
 STOPSIGNAL SIGTERM
 
 CMD ["/opt/startup.sh"]
+
+#https://github.com/opencart/opencart/releases/download/3.0.2.0/3.0.2.0-OpenCart.zip

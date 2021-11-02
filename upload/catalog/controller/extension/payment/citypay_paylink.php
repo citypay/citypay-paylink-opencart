@@ -1,11 +1,11 @@
 <?php
 
 
-class ControllerPaymentCityPayPaylink extends Controller {
+class ControllerExtensionPaymentCityPayPaylink extends Controller {
 
     function __construct($registry) {
         parent::__construct($registry);
-        $this->load->language('payment/citypay_paylink');
+        $this->load->language('extension/payment/citypay_paylink');
 
 
     }
@@ -13,7 +13,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
     protected function process() {
         
         $this->load->model('checkout/order');
-        $this->load->model('payment/citypay_paylink');
+        $this->load->model('extension/payment/citypay_paylink');
         $this->load->model('setting/setting');
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
     
@@ -58,7 +58,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
         //
         //  Token configuration
         //
-        $pbUrl=$this->url->link('payment/citypay_paylink/postback') . '&order_id=' . $order['order_id'];
+        $pbUrl=$this->url->link('extension/payment/citypay_paylink/postback') . '&order_id=' . $order['order_id'];
 
         if(trim($this->config->get('citypay_paylink_postback_url')) != ''){
             $customURL = trim($this->config->get('citypay_paylink_postback_url'));
@@ -71,8 +71,8 @@ class ControllerPaymentCityPayPaylink extends Controller {
         $tokenConfig = array();
         $tokenConfig['postback_policy'] = 'async';
         $tokenConfig['postback'] = $pbUrl;
-        $tokenConfig['redirect_success'] = $this->url->link('payment/citypay_paylink/accept');
-        $tokenConfig['redirect_failure'] = $this->url->link('payment/citypay_paylink/cancel');
+        $tokenConfig['redirect_success'] = $this->url->link('extension/payment/citypay_paylink/accept');
+        $tokenConfig['redirect_failure'] = $this->url->link('extension/payment/citypay_paylink/cancel');
         $tokenConfig['return_params'] = 'true';
         
         //
@@ -103,7 +103,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
                 $decimal_places
             );
             $this->log->write(
-                '[catalog/controller/payment/citypay_paylink] '
+                '[catalog/controller/extension/payment/citypay_paylink] '
                     . $errorMessage
             );
             
@@ -173,7 +173,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
                         );
                     }
                     
-                    $logMessage = '[catalog/controller/payment/citypay_paylink] '
+                    $logMessage = '[catalog/controller/extension/payment/citypay_paylink] '
                         . sprintf(
                             $this->language->get('error_unable_to_obtain_payment_token_request_error'),
                             $errorMessage
@@ -186,7 +186,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
                 //  The Paylink server has generated a HTTP response code that
                 //  indicates that an error has occurred.
                 //
-                $logMessage = '[catalog/controller/payment/citypay_paylink]'
+                $logMessage = '[catalog/controller/extension/payment/citypay_paylink]'
                     . sprintf(
                         $this->language->get('error_unable_to_obtain_payment_token_http_connection_error'),
                         $httpsResponseCode
@@ -205,7 +205,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
 
             curl_close($ch);
             
-            $logMessage = '[catalog/controller/payment/citypay_paylink]'
+            $logMessage = '[catalog/controller/extension/payment/citypay_paylink]'
                 . sprintf(
                     $this->language->get('error_unable_to_obtain_payment_token_curl_connection_error'),
                     $httpsResponseCode,
@@ -223,7 +223,7 @@ class ControllerPaymentCityPayPaylink extends Controller {
      */
     public function index() {
         $this->load->model('checkout/order');
-        $this->load->model('payment/citypay_paylink');
+        $this->load->model('extension/payment/citypay_paylink');
         
 //        $gateway_info = $this->model_payment_citypay_paylink;
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
@@ -240,11 +240,11 @@ class ControllerPaymentCityPayPaylink extends Controller {
 
         $data['text_loading'] = $this->language->get('text_loading');
 
-        $data['citypay_paylink_plugin'] = $this->url->link('payment/citypay_paylink');
+        $data['citypay_paylink_plugin'] = $this->url->link('extension/payment/citypay_paylink');
 
-        return $this->load->view('payment/citypay_paylink', $data);
+        return $this->load->view('extension/payment/citypay_paylink', $data);
 
-        $this->response->setOutput($this->load->view('payment/citypay_paylink', $data));
+        $this->response->setOutput($this->load->view('extension/payment/citypay_paylink', $data));
     }
     
     private function _log(
