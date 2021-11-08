@@ -490,7 +490,7 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
         )) {            
             $this->_log(
                 $this->language->get('error_paylink_response_data_not_available_for_validation'),
-                $this->request
+                $this->request->post
             );
             return false;
         }
