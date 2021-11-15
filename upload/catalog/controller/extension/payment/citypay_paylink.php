@@ -82,7 +82,7 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
         $tokenRequest['merchantId'] = $this->config->get('payment_citypay_paylink_merchant_id');
         $tokenRequest['licenceKey'] = $this->config->get('payment_citypay_paylink_licence_key');
         $tokenRequest['config'] = $tokenConfig;
-        $tokenRequest['test'] = true;
+        $tokenRequest['test'] = $this->config->get('payment_citypay_paylink_testing_mode') == 1;
         $tokenRequest['identifier'] = '[OrderId: '
             . $order['order_id']
             . ', InvoiceNo: ['
@@ -160,7 +160,7 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
                     //  authentication, validation or other upstream errors while processing
                     //  the Payment Transaction Request.
                     //
-                    $template = $this->language-get('error_template_payment_token_request');
+                    $template = $this->language->get('error_template_payment_token_request');
                     $errors = $decodedResponse->errors;
                     $i_max = count($errors);
                     for ($i = 0x00; $i < $i_max; $i++) {

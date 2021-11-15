@@ -29,6 +29,7 @@ $_['entry_label_expired_order_status'] = 'Expired Order Status';
 $_['entry_label_failed_order_status'] = 'Failed Order Status';
 
 $_['entry_label_status'] = 'Status';
+$_['entry_label_testing_mode'] = 'Testing mode';
 
 $_['entry_label_geo_zone'] = 'Geo Zone';
 $_['entry_label_sort_order'] = 'Sort Order';
