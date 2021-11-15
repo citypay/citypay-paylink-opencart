@@ -15,11 +15,6 @@ class ControllerExtensionPaymentCitypayPaylink extends Controller {
             
             $this->model_setting_setting->editSetting('payment_citypay_paylink', $this->request->post);
             $this->session->data['success'] = $this->language->get('message_success_save');
-//            echo "<pre />\n";
-//            print_r($this->request->post);
-//            echo "</pre>\n";
-//
-//            exit;
             $this->response->redirect($this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true));
         }
         
@@ -114,6 +109,12 @@ class ControllerExtensionPaymentCitypayPaylink extends Controller {
             $data['payment_citypay_paylink_merchant_currency_id'] = $this->request->post['payment_citypay_paylink_merchant_currency_id'];
         } else {
             $data['payment_citypay_paylink_merchant_currency_id'] = $this->config->get('payment_citypay_paylink_merchant_currency_id');
+        }
+
+        if (isset($this->request->post['payment_citypay_paylink_testing_mode'])) {
+            $data['payment_citypay_paylink_testing_mode'] = $this->request->post['payment_citypay_paylink_testing_mode'];
+        } else {
+            $data['payment_citypay_paylink_testing_mode'] = $this->config->get('payment_citypay_paylink_testing_mode');
         }
         
         if (isset($this->request->post['payment_citypay_paylink_new_order_status_id'])) {
