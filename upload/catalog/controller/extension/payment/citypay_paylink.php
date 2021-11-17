@@ -481,7 +481,6 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
         //  Check that there is an associated payload.
         //
         if (!isset(
-            $this->request->post['authcode'],
             $this->request->post['amount'],
             $this->request->post['errorcode'],
             $this->request->post['merchantid'],
@@ -512,7 +511,9 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
         //  key [licencekey] used for the Payment Transaction which is not transmitted
         //  back to the Merchant Application indirectly via the Customer Browser.
         //
-        $digestSource = $this->request->post['authcode']
+
+        $authcode = isset($this->request->post['authcode']) ? $this->request->post['authcode'] : "";
+        $digestSource = $authcode
             . $this->request->post['amount']
             . $this->request->post['errorcode']
             . $this->request->post['merchantid']
