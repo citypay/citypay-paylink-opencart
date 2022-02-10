@@ -4,7 +4,7 @@ $_['button_confirm'] = 'Confirm';
 
 $_['error_unable_to_generate_ldf_amount']
     = '[CityPay Paylink Plugin for OpenCart] Unable to generate amount'
-    . ' expressed in LDF form: amount $s, decimal places $s';
+    . ' expressed in LDF form: amount %s, decimal places %s';
 
 $_['error_unable_to_obtain_payment_token_request_error']
     = '[CityPay Paylink Plugin for OpenCart] Error obtaining a suitable'
