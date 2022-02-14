@@ -9,14 +9,19 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
 
 
     }
-    
+
     protected function process() {
-        
+
         $this->load->model('checkout/order');
         $this->load->model('extension/payment/citypay_paylink');
         $this->load->model('setting/setting');
+
+        if(!isset($this->session->data['order_id'])) {
+            $this->response->redirect($this->url->link('checkout/failure'));
+        }
+
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-    
+
         //
         //  Set the status of the order to that specified by the configuration
         //  item 'citypay_paylink_new_order_status_id'.
@@ -28,14 +33,17 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
         $this->model_checkout_order->addOrderHistory(
             $order['order_id'],
             $this->config->get('payment_citypay_paylink_new_order_status_id'),
-            $this->language->get('message_payment_transaction_status_advice_before_token_request')
+            sprintf(
+                $this->language->get('message_payment_transaction_status_advice_before_token_request'),
+                date("H:i:s")
+            )
         );
-        
+
         //
         //  Obtain Paylink v3 token to set up the transaction and pre-populate
-        //  the payment form fields as appropriate. 
+        //  the payment form fields as appropriate.
         //
-        
+
         //
         //
         //
@@ -44,7 +52,7 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
         $cardholderAddress['area'] = html_entity_decode($order['payment_city'], ENT_QUOTES, 'UTF-8');
         $cardholderAddress['country'] = html_entity_decode($order['payment_iso_code_2'], ENT_QUOTES, 'UTF-8');
         $cardholderAddress['postcode'] = html_entity_decode($order['payment_postcode'], ENT_QUOTES, 'UTF-8');
-        
+
         //
         //  Cardholder and cardholder address
         //
@@ -54,7 +62,7 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
         $cardholder['lastName'] = html_entity_decode($order['payment_lastname'], ENT_QUOTES, 'UTF-8');
         $cardholder['email'] = html_entity_decode($order['email'], ENT_QUOTES, 'UTF-8');
         $cardholder['address'] = $cardholderAddress;
-        
+
         //
         //  Token configuration
         //
@@ -74,7 +82,7 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
         $tokenConfig['redirect_success'] = $this->url->link('extension/payment/citypay_paylink/accept');
         $tokenConfig['redirect_failure'] = $this->url->link('extension/payment/citypay_paylink/cancel');
         $tokenConfig['return_params'] = 'true';
-        
+
         //
         //  Token request setup
         //
@@ -89,7 +97,7 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
             . $order['invoice_no']
             . ']';
         $tokenRequest['cardholder'] = $cardholder;
-        
+
         //
         //  Paylink v3 requires the value of the transaction to be expressed
         //  in 'lowest denomination form' ("LDF").
@@ -106,13 +114,13 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
                 '[catalog/controller/extension/payment/citypay_paylink] '
                     . $errorMessage
             );
-            
+
             $this->response->redirect($this->url->link('checkout/checkout', '', $this->config->get('config_secure')));
             return;
         }
 
-        $tokenRequest['amount'] = $amount * pow(10, $decimal_places);
-        
+        $tokenRequest['amount'] = round($amount , $decimal_places) * pow(10, $decimal_places);
+
         $jsonEncodedRequest = json_encode($tokenRequest);
 
         $curl_stderr = fopen('php://temp', 'w+');
@@ -141,16 +149,25 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
 
             $logger->write('HttpsResponse---> '.$httpsResponse);
 
-            if ($httpsResponseCode == 200) {    
+            if ($httpsResponseCode == 200) {
                 $decodedResponse = json_decode($httpsResponse);
 
 
 
                 if ($decodedResponse->result == 0x01)
                 {
-//                    $token = $decodedResponse->id;
+                    $token = $decodedResponse->id;
 //                    $url = $decodedResponse->url;
-                    
+
+                    $this->model_checkout_order->addOrderHistory(
+                        $order['order_id'],
+                        $this->config->get('payment_citypay_paylink_new_order_status_id'),
+                        sprintf(
+                            $this->language->get('message_payment_transaction_status_advice_success_token_create'),
+                            date("H:i:s"),
+                            $token
+                        )
+                    );
                     $this->response->redirect($decodedResponse->url);
                 }
                 else
@@ -172,7 +189,7 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
                             $error->msg
                         );
                     }
-                    
+
                     $logMessage = '[catalog/controller/extension/payment/citypay_paylink] '
                         . sprintf(
                             $this->language->get('error_unable_to_obtain_payment_token_request_error'),
@@ -204,7 +221,7 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
             $httpsResponseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
             curl_close($ch);
-            
+
             $logMessage = '[catalog/controller/extension/payment/citypay_paylink]'
                 . sprintf(
                     $this->language->get('error_unable_to_obtain_payment_token_curl_connection_error'),
@@ -212,30 +229,30 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
                     $req_stderr
                 );
         }
-        
+
         $this->log->write($logMessage);
-       
+
         $this->response->redirect($this->url->link('checkout/checkout', '', $this->config->get('config_secure')));
     }
-        
+
     /**
-     * 
+     *
      */
     public function index() {
         $this->load->model('checkout/order');
         $this->load->model('extension/payment/citypay_paylink');
-        
+
 //        $gateway_info = $this->model_payment_citypay_paylink;
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-        
+
         if ($this->request->server['REQUEST_METHOD'] == 'POST') {
             $this->process();
         }
-        
+
         $data = array();
-        
+
         $data['order_id'] = $order_info['order_id'];
-        
+
         $data['button_confirm'] = $this->language->get('button_confirm');
 
         $data['text_loading'] = $this->language->get('text_loading');
@@ -246,7 +263,7 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
 
         $this->response->setOutput($this->load->view('extension/payment/citypay_paylink', $data));
     }
-    
+
     private function _log(
         $message
     ) {
@@ -255,21 +272,21 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
         //
         $backtrace = debug_backtrace();
         array_shift($backtrace);
-        
+
         $args = func_get_args();
         if (count($args) > 0x01) {
             array_shift($args);
         }
-        
+
         //
         //  Dump the message, and the backtrace to the application log file.
         //
         $this->log->write(vsprintf($message, $args));
         $this->log->write($backtrace);
     }
-    
+
     public function accept() {
-             
+
         if ($this->request->server['REQUEST_METHOD'] != 'POST') {
             $this->_log(
                 $this->language->get('error_purported_redirection_by_paylink_of_incorrect_type'),
@@ -280,7 +297,7 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
             $this->response->redirect($this->url->link('checkout/failure'));
             return;
         }
-            
+
         if (!$this->validate($this->config->get('payment_citypay_paylink_licence_key'))) {
             $this->_log(
                 $this->language->get('error_paylink_response_could_not_be_validated'),
@@ -298,15 +315,15 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
             $this->response->redirect($this->url->link('checkout/failure'));
             return;
         }
-        
+
         $this->load->model('checkout/order');
 //        $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-       
+
         $this->response->redirect($this->url->link('checkout/success'));
     }
-    
+
     public function cancel() {
-              
+
         if ($this->request->server['REQUEST_METHOD'] != 'POST') {
             $this->_log(
                 $this->language->get('error_purported_redirection_by_paylink_of_incorrect_type'),
@@ -317,7 +334,7 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
             $this->response->redirect($this->url->link('checkout/failure'));
             return;
         }
-            
+
         if (!$this->validate($this->config->get('payment_citypay_paylink_licence_key'))) {
             $this->_log(
                 $this->language->get('error_paylink_response_could_not_be_validated'),
@@ -326,7 +343,7 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
             $this->response->redirect($this->url->link('checkout/failure'));
             return;
         }
-            
+
         if ($this->request->post['authorised'] != 'false') {
             $this->_log(
                 $this->language->get('error_paylink_response_indicates_payment_failure'),
@@ -335,13 +352,13 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
             $this->response->redirect($this->url->link('checkout/failure'));
             return;
         }
-        
+
         $this->load->model('checkout/order');
 //        $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-        
+
         $this->response->redirect($this->url->link('checkout/failure'));
     }
-     
+
     public function postback() {
         $logger = new Log('debug.log'); //creating a log file for debug
         $logger->write('Calling postback...');
@@ -357,13 +374,13 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
             else $new = $obj;
             return $new;
         }
-         
+
         $this->load->model('checkout/order');
-        
+
         $order_id = $this->request->get['order_id'];
-        
+
         $order = $this->model_checkout_order->getOrder($order_id);
-        
+
         if ($this->request->server['REQUEST_METHOD'] != 'POST') {
             http_response_code(400);
             flush();
@@ -372,11 +389,14 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
             $this->model_checkout_order->addOrderHistory(
                 $order['order_id'],
                 $this->config->get('payment_citypay_paylink_failed_order_status_id'),
-                $errorMessage
+                sprintf(
+                    $errorMessage,
+                    date("H:i:s")
+                )
             );
             return;
         }
-        
+
         //  Get the message body accompanying the incoming HTTP POST request,
         //  using a call to file_get_contents in conjunction with the PHP
         //  "php://input" read-only I/O stream.
@@ -390,7 +410,10 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
             $this->model_checkout_order->addOrderHistory(
                 $order['order_id'],
                 $this->config->get('payment_citypay_paylink_failed_order_status_id'),
-                $errorMessage
+                sprintf(
+                    $errorMessage,
+                    date("H:i:s")
+                )
             );
             return;
         }
@@ -398,7 +421,7 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
         //
         //  De-serialize the JSON formatted message body contents to form
         //  an object, of an anonymous class, structure to contain properties
-        //  that mirror those of the JSON packet.  
+        //  that mirror those of the JSON packet.
         //
         $jsonPostback = json_decode($postback);
         if ($jsonPostback == NULL) {
@@ -409,31 +432,37 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
             $this->model_checkout_order->addOrderHistory(
                 $order['order_id'],
                 $this->config->get('payment_citypay_paylink_failed_order_status_id'),
-                $errorMessage
+                sprintf(
+                    $errorMessage,
+                    date("H:i:s")
+                )
             );
             return;
         }
-        
+
         $this->request->post = object_to_array($jsonPostback);
         if (!$this->validate($this->config->get('payment_citypay_paylink_licence_key'))) {
             http_response_code(400);
-            flush(); 
+            flush();
             $errorMessage = $this->language->get('error_postback_message_body_not_capable_of_validation');
             $this->_log($errorMessage);
             $this->model_checkout_order->addOrderHistory(
                 $order['order_id'],
                 $this->config->get('payment_citypay_paylink_failed_order_status_id'),
-                $errorMessage
+                sprintf(
+                    $errorMessage,
+                    date("H:i:s")
+                )
             );
             return;
         }
-        
+
         //
         //  Return a HTTP 200 OK response code to the Paylink server.
-        //     
+        //
         http_response_code(200);
         flush();
-       
+
         //
         //  Check whether the Payment Transaction was authorised.
         //
@@ -447,36 +476,40 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
                 $this->config->get('payment_citypay_paylink_completed_order_status_id'),
                 sprintf(
                     $this->language->get('message_payment_transaction_status_advice_on_postback_authorised'),
+                    date("H:i:s"),
                     $this->request->post['authcode']
                 )
             );
         } else {
-            $errorcode = trim($this->request->post['errorcode']);
-            switch ($errorcode) {
-            case '080':
-                $status = $this->config->get('payment_citypay_paylink_cancelled_order_status_id');
-                $message = $this->language->get('message_payment_transaction_status_advice_on_postback_cancelled');
-                break;
-                
-            default:
-                $status = $this->config->get('payment_citypay_paylink_failed_order_status_id');
-                $message = $this->language->get('message_payment_transaction_status_advice_on_postback_not_authorised');
-                break;
+            if ($order['order_status'] != 'Complete') {
+                $errorcode = trim($this->request->post['errorcode']);
+                switch ($errorcode) {
+                    case '080':
+                        $status = $this->config->get('payment_citypay_paylink_cancelled_order_status_id');
+                        $message = $this->language->get('message_payment_transaction_status_advice_on_postback_cancelled');
+                        break;
+
+                    default:
+                        $status = $this->config->get('payment_citypay_paylink_failed_order_status_id');
+                        $message = $this->language->get('message_payment_transaction_status_advice_on_postback_not_authorised');
+                        break;
+                }
+
+                $this->model_checkout_order->addOrderHistory(
+                    $order['order_id'],
+                    $status,
+                    sprintf(
+                        $message,
+                        date("H:i:s"),
+                        $errorcode
+                    )
+                );
             }
-            
-            $this->model_checkout_order->addOrderHistory(
-                $order['order_id'],
-                $status,
-                sprintf(
-                    $message,
-                    $errorcode
-                )
-            );
         }
     }
-    
+
     protected function validate($licenceKey) {
-        
+
         //
         //  Check that there is an associated payload.
         //
@@ -486,14 +519,14 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
             $this->request->post['merchantid'],
             $this->request->post['transno'],
             $this->request->post['identifier']
-        )) {            
+        )) {
             $this->_log(
                 $this->language->get('error_paylink_response_data_not_available_for_validation'),
                 $this->request->post
             );
             return false;
         }
-        
+
         //
         //  The Customer Browser Redirection from the Paylink Payment Form to the
         //  Merchant Application is performed through a POST operation to the
@@ -502,7 +535,7 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
         //  If the Payment Transaction has been configured to return the parameters
         //  of the authorised or otherwise declined Payment Transaction, the parameters
         //  are provided in URL encoded form which PHP processes to generate the
-        //  $_POST associative array. 
+        //  $_POST associative array.
         //
         //  Note
         //
@@ -540,8 +573,8 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
         //
         //  Compare the Base64 encoded SHA256 hash value calculated by the
         //  Merchant Application to the Base64 encoded SHA256 hash value
-        //  accompanying the Payment Transaction parameters. 
-        //    
+        //  accompanying the Payment Transaction parameters.
+        //
         return ($this->request->post['sha256'] == $digest_sha256_base64);
     }
 }

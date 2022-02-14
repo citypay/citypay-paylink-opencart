@@ -11,7 +11,7 @@ services:
                 - ocnet
     opencart:
         container_name: opencart
-        image: citypay/opencart-php7.3:3.0.3.8
+        image: citypay/opencart-php7.4:3.0.4
         ports:
                 - 127.0.0.1:80:80
                 - 127.0.0.1:4040:4040
