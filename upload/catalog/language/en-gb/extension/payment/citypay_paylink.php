@@ -35,12 +35,12 @@ $_['error_unable_to_obtain_payment_token_curl_connection_error']
     . '%s';
 
 $_['error_postback_message_not_delivered_as_http_post']
-    = '[CityPay Paylink Plugin for OpenCart] Error detected on receipt of'
+    = '%s - [CityPay Paylink Plugin for OpenCart] Error detected on receipt of'
     . ' postback message:  connection has not been made as a HTTP POST'
     . ' request.';
 
 $_['error_postback_message_body_not_parseable_as_json']
-    = '[CityPay Paylink Plugin for OpenCart] Error detected on receipt of'
+    = '%s - [CityPay Paylink Plugin for OpenCart] Error detected on receipt of'
     . ' payload accompanying the postback message, and attempting to'
     . ' interpret it as a JSON message.';
 
@@ -68,15 +68,18 @@ $_['error_purported_redirection_by_paylink_of_incorrect_type']
     . "\nRequest (post) data -\n%s";
 
 $_['message_payment_transaction_status_advice_before_token_request']
-    = '[CityPay Paylink Plugin for OpenCart] Transaction status set to '
+    = '%s - [CityPay Paylink Plugin for OpenCart] Transaction status set to '
     . '\'pending\' for token request.';
 
+$_['message_payment_transaction_status_advice_success_token_create']
+    = '%s - [CityPay Paylink Plugin for OpenCart] Token Created: %s ';
+
 $_['message_payment_transaction_status_advice_on_postback_authorised']
-    = '[CityPay Paylink Plugin for OpenCart] Transaction result: AUTHORISED'
+    = '%s - [CityPay Paylink Plugin for OpenCart] Transaction result: AUTHORISED'
     . ' (Authorisation code: %s)';
 
 $_['message_payment_transaction_status_advice_on_postback_not_authorised']
-    = '[CityPay Paylink Plugin for OpenCart] Transaction result: NOT AUTHORISED'
+    = '%s - [CityPay Paylink Plugin for OpenCart] Transaction result: NOT AUTHORISED'
     . ' (Error code: %s)';
 
 $_['message_payment_transaction_status_advice_on_postback_token_expired']
@@ -84,5 +87,5 @@ $_['message_payment_transaction_status_advice_on_postback_token_expired']
     . ' (Error code: %s)';
 
 $_['message_payment_transaction_status_advice_on_postback_cancelled']
-    = '[CityPay Paylink Plugin for OpenCart] Transaction result: CANCELLED'
+    = '%s - [CityPay Paylink Plugin for OpenCart] Transaction result: CANCELLED'
     . ' (Error code: %s)';

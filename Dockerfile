@@ -16,12 +16,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     nginx \
     && rm -rf /var/lib/apt/lists/*
 
-RUN apt-add-repository ppa:ondrej/php && apt update && apt-get install -y php7.3-fpm php7.3-cli php7.3-mcrypt php7.3-gd php7.3-mysqlnd php7.3-curl php7.3-zip php7.3-xml
+RUN apt-add-repository ppa:ondrej/php && apt update && apt-get install -y php7.4-fpm php7.4-cli php7.4-mcrypt php7.4-gd php7.4-mysqlnd php7.4-curl php7.4-zip php7.4-xml
 
 # Run some install actions
 RUN phpenmod mcrypt
 
-ENV OC_VERSION=3.0.3.8
+ENV OC_VERSION=3.0.4
 
 # Install opencart
 RUN mkdir /opencart \
@@ -39,7 +39,7 @@ RUN curl -O "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-386.zip" -k
     && cp ngrok /usr/bin/ngrok
 
 # Setup PHP
-RUN sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/' /etc/php/7.3/fpm/php.ini
+RUN sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/' /etc/php/7.4/fpm/php.ini
 
 RUN echo '\ndisplay_errors = 1;\nerror_reporting = E_ALL;' >> /opencart/php.ini
 

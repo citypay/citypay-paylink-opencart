@@ -24,7 +24,7 @@ sophisticated functionality, as follows, is not presently supported -
 
 Version support
 ---------------
-OpenCart version 3.0.3.8.
+OpenCart version 3.0.4
 
 PHP version
 ---------------

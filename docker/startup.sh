@@ -33,5 +33,5 @@ sed -i "s|define('HTTPS_CATALOG', '.*');|define('HTTPS_CATALOG', '"$NGROK_URL"/'
 echo 'ngrokurl=' $NGROK_URL
 echo ============================================
 
-service php7.3-fpm start
+service php7.4-fpm start
 nginx -g 'daemon off;'
