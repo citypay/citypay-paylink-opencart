@@ -7,7 +7,7 @@ $_['error_unable_to_generate_ldf_amount']
     . ' expressed in LDF form: amount %s, decimal places %s';
 
 $_['error_unable_to_obtain_payment_token_request_error']
-    = '[CityPay Paylink Plugin for OpenCart] Error obtaining a suitable'
+    = '%s - [CityPay Paylink Plugin for OpenCart] Error obtaining a suitable'
     . ' CityPay Paylink token from the remote server for payment'
     . ' processing due to an issue relating to the contents of the'
     . ' token request sent by the plugin to the remote service.'
