@@ -190,9 +190,9 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
                         );
                     }
 
-                    $logMessage = '[catalog/controller/extension/payment/citypay_paylink] '
-                        . sprintf(
+                    $logMessage = sprintf(
                             $this->language->get('error_unable_to_obtain_payment_token_request_error'),
+                            date("H:i:s"),
                             $errorMessage
                         );
                 }
@@ -203,8 +203,7 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
                 //  The Paylink server has generated a HTTP response code that
                 //  indicates that an error has occurred.
                 //
-                $logMessage = '[catalog/controller/extension/payment/citypay_paylink]'
-                    . sprintf(
+                $logMessage = sprintf(
                         $this->language->get('error_unable_to_obtain_payment_token_http_connection_error'),
                         $httpsResponseCode
                     );
@@ -222,17 +221,22 @@ class ControllerExtensionPaymentCityPayPaylink extends Controller {
 
             curl_close($ch);
 
-            $logMessage = '[catalog/controller/extension/payment/citypay_paylink]'
-                . sprintf(
+            $logMessage = sprintf(
                     $this->language->get('error_unable_to_obtain_payment_token_curl_connection_error'),
                     $httpsResponseCode,
                     $req_stderr
                 );
         }
 
-        $this->log->write($logMessage);
+        $this->log->write('[catalog/controller/extension/payment/citypay_paylink] '.$logMessage);
 
-        $this->response->redirect($this->url->link('checkout/checkout', '', $this->config->get('config_secure')));
+        $this->model_checkout_order->addOrderHistory(
+            $order['order_id'],
+            $this->config->get('payment_citypay_paylink_failed_order_status_id'),
+            $logMessage
+        );
+
+        $this->response->redirect($this->url->link('checkout/failure'));
     }
 
     /**
