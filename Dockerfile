@@ -21,7 +21,7 @@ RUN apt-add-repository ppa:ondrej/php && apt update && apt-get install -y php7.4
 # Run some install actions
 RUN phpenmod mcrypt
 
-ENV OC_VERSION=3.0.5
+ENV OC_VERSION=3.0.6
 
 # Install opencart
 RUN mkdir /opencart \
